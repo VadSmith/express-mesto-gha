@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const { PORT = 300 } = process.env;
 const app = express();
 
-mongoose.connect('mongodb://localhost:27017/mydb', {
+mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
