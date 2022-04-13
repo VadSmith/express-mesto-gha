@@ -3,7 +3,7 @@ const Card = require('../models/card');
 // Получение списка карточек
 const getCards = (req, res) => {
   Card.find({})
-    .then((cards) => res.send({ cards }))
+    .then((cards) => res.send(cards))
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 };
 
@@ -40,5 +40,5 @@ const deleteCard = (req, res) => {
 module.exports = {
   deleteCard,
   getCards,
-  deleteCard
+  createCard
 }
