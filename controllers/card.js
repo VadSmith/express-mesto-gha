@@ -27,8 +27,8 @@ const createCard = (req, res) => {
 };
 
 const deleteCard = (req, res) => {
-  Card.removeById(req.params.cardId)
-    .then(console.log("Card deleted"))
+  Card.remove({ "_id": req.params.cardId })
+    .then(res.send({ message: 'Карточка удалена' }))
     .catch(() => res.status(404).send({ message: 'Карточка не найдена' }))
 }
 // module.exports = deleteCard = (req, res) => {
