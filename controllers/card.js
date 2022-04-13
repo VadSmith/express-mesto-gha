@@ -23,7 +23,7 @@ const createCard = (req, res) => {
     .then((card) => {
       res.send(card);
     }) // создадим документ на основе пришедших данных
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch(() => res.status(400).send({ message: 'Произошла ошибка' }));
 };
 
 const deleteCard = (req, res) => {
