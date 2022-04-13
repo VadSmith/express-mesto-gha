@@ -22,6 +22,6 @@ module.exports.createUser = (req, res) => {
     .then((user) => {
       res.send(user);
     }) // создадим документ на основе пришедших данных
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch(() => res.status(400).send({ message: 'Произошла ошибка' }));
 
 };
