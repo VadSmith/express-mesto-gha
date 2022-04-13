@@ -14,8 +14,17 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   // useFindAndModify: false,
 });
 
+app.use((req, res, next) => {
+  req.user = {
+    // вставьте сюда _id созданного в предыдущем пункте пользователя
+    _id: '62568bf46a9e6d1712d3a026'
+  };
+
+  next();
+});
+
 app.use('/', require('./routes/user'));
-// app.use('/users', require('./routes/user'));
+app.use('/', require('./routes/card'));
 
 app.listen(PORT, () => {
   console.log('Express is on port 3000!');
