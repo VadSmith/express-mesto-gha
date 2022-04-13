@@ -18,7 +18,13 @@ module.exports.getUser = (req, res) => {
 module.exports.createUser = (req, res) => {
   // получим из объекта запроса имя и описание пользователя
   const { name, about, avatar } = req.body;
-
-  User.create({ name, about, avatar }) // создадим документ на основе пришедших данных
+  // console.log(name, about, avatar);
+  // res.send(req.body);
+  // console.log(req.body);
+  User.create({ name, about, avatar })
+    .then((user) => {
+      res.send(user);
+    }) // создадим документ на основе пришедших данных
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+
 };
