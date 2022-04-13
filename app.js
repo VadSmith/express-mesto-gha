@@ -23,7 +23,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/', require('./routes/user'));
+// app.use('/', require('./routes/user'));
 app.use('/', require('./routes/card'));
 
 app.listen(PORT, () => {
