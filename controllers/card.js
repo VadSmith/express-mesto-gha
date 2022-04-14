@@ -22,7 +22,7 @@ const createCard = (req, res) => {
 const deleteCard = (req, res) => {
   Card.deleteOne({ "_id": req.params.cardId })
     .then(res.send({ message: 'Карточка удалена' }))
-    .catch((err) => console.log(err))
+    .catch((err) => console.log(err.name))
   // .catch((err) => res.status(500).send({ err.message }))
 }
 
