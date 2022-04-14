@@ -10,7 +10,15 @@ const patchUser = (req, res) => {
 
 // Обновить аватар
 const patchAvatar = (req, res) => {
-  User.findByIdAndUpdate(req.params._id, { avatar: req.body.avatar })
+  User.findByIdAndUpdate(
+    req.params._id,
+    { avatar: req.body.avatar },
+    {
+      new: true, // обработчик then получит на вход обновлённую запись
+      runValidators: true, // данные будут валидированы перед изменением
+      // upsert: true // если пользователь не найден, он будет создан
+    }
+  )
     .then(user => res.send(user))
     .catch(err => res.status(500).send(err.message))
 };
