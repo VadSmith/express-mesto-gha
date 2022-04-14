@@ -13,7 +13,7 @@ module.exports.getUser = (req, res) => {
     .then((user) => {
       res.send(user)
     })
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch((err) => res.status(500).send({ message: err.message }));
 };
 
 // Создание юзера
