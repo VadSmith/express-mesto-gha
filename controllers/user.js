@@ -10,7 +10,9 @@ module.exports.getUsers = (req, res) => {
 // Поиск юзера по ID
 module.exports.getUser = (req, res) => {
   User.findById(req.params.userId)
-    .then((user) => res.send(user))
+    .then((user) => {
+      res.send(user)
+    })
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 };
 
