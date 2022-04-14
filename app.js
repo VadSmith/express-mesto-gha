@@ -21,8 +21,11 @@ app.use((req, res, next) => {
     // вставьте сюда _id созданного в предыдущем пункте пользователя
     _id: '62568bf46a9e6d1712d3a026'
   };
-
   next();
+});
+
+app.get('/', (req, res) => {
+  res.send('Root / Main Page');
 });
 
 app.use(require('./routes/user'));
