@@ -4,22 +4,25 @@ const User = require('../models/user');
 // Обновить профиль
 const patchUser = (req, res) => {
   User.findByIdAndUpdate(
-    req.params._id,
-    { name: req.body.name, about: req.body.about },
+    req.user._id,
+    { "name": req.body.name, "about": req.body.about },
     {
       new: true, // обработчик then получит на вход обновлённую запись
       runValidators: true, // данные будут валидированы перед изменением
       // upsert: true // если пользователь не найден, он будет создан
     }
   )
-    .then(user => res.send(user))
+    .then(user => {
+      console.log(user);
+      res.send(user)
+    })
     .catch(err => res.status(500).send(err.message))
 };
 
 // Обновить аватар
 const patchAvatar = (req, res) => {
   User.findByIdAndUpdate(
-    req.params._id,
+    req.user._id,
     { avatar: req.body.avatar },
     {
       new: true, // обработчик then получит на вход обновлённую запись

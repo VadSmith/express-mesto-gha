@@ -14,7 +14,7 @@ const createCard = (req, res) => {
   const owner = req.user._id;
   Card.create({ name, link, owner })
     .then((card) => {
-      res.send(card);
+      res.status(200).send(card);
     }) // создадим документ на основе пришедших данных
     .catch(() => res.status(400).send({ message: 'Произошла ошибка' }));
 };
