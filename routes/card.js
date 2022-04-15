@@ -9,7 +9,3 @@ router.get('/cards', getCards);
 router.delete('/cards/:cardId', deleteCard);
 router.get('/cards/:cardId', getCard);
 router.post('/cards', createCard);
-
-router.get('/', (req, res) => {
-  res.send('Root / Main Page');
-});

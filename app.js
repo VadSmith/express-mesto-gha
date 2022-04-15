@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use((req, res, next) => {
   req.user = {
     // вставьте сюда _id созданного в предыдущем пункте пользователя
-    _id: '62568bf46a9e6d1712d3a026'
+    _id: '625988c51279959a16458236'
   };
   next();
 });
@@ -28,9 +28,13 @@ app.get('/', (req, res) => {
   res.send('Root / Main Page');
 });
 
-app.use(require('./routes/user'));
+// app.use(require('./routes/user'));
 app.use(require('./routes/card'));
-
+// app.use('/cards', require('./routes/card'));
+app.use(require('./routes/user'));
+app.patch('/404', (req, res) => {
+  res.status(404).send({ message: "Обработка неправильного пути" })
+})
 app.listen(PORT, () => {
   console.log('Express is on port 3000!', BASE_URL);
 });
