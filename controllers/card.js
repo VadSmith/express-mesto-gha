@@ -32,10 +32,27 @@ const getCard = (req, res) => {
     .then((card) => res.send({ card }))
     .catch((err) => res.status(err.statusCode).send(err.message));
 };
+const likeCard = (req, res) => {
+  Card.findByIdAndUpdate(
+    req.params.cardId,
+    { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
+    { new: true },
+  )
+}
+
+const dislikeCard = (req, res) => {
+  Card.findByIdAndUpdate(
+    req.params.cardId,
+    { $pull: { likes: req.user._id } }, // убрать _id из массива
+    { new: true },
+  )
+}
 
 module.exports = {
   deleteCard,
   getCards,
   createCard,
-  getCard
+  getCard,
+  likeCard,
+  dislikeCard
 }

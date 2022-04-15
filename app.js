@@ -28,9 +28,7 @@ app.get('/', (req, res) => {
   res.send('Root / Main Page');
 });
 
-// app.use(require('./routes/user'));
 app.use(require('./routes/card'));
-// app.use('/cards', require('./routes/card'));
 app.use(require('./routes/user'));
 app.patch('/404', (req, res) => {
   res.status(404).send({ message: "Обработка неправильного пути" })
