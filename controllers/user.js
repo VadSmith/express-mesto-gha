@@ -1,3 +1,6 @@
+const CastError = require('../errors/CastError');
+const NotFound = require('../errors/NotFound');
+const NotFoundError = require('../errors/NotFound');
 const User = require('../models/user');
 
 // Обновить профиль
@@ -10,7 +13,8 @@ const patchUser = (req, res, next) => {
       runValidators: true, // данные будут валидированы перед изменением
       // upsert: true // если пользователь не найден, он будет создан
     }
-  )
+  ).
+    orfail(new NotFound("Ошибка: Пользователь не найден"))
     .then(user => {
       // console.log(user);
       res.send(user)
@@ -38,6 +42,7 @@ const patchAvatar = (req, res, next) => {
 // Получение списка юзеров
 const getUsers = (req, res, next) => {
   User.find({})
+    .orFail(new NotFound('Ни одного пользователя не найдено'))
     .then((users) => res.send(users))
     // .catch((err) => res.status(500).send(err.message));
     .catch(err => next(err));
@@ -46,11 +51,17 @@ const getUsers = (req, res, next) => {
 // Поиск юзера по ID
 const getUser = (req, res, next) => {
   User.findById(req.params.userId)
+    .orFail(new NotFound('Пользователь не найден'))
     .then((user) => {
       res.send(user)
     })
-    // .catch((err) => res.status(500).send({ message: err.name }));
-    .catch(err => next(err));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new CastError('Ошибка: Введен некорректный id пользователя'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 // Создание юзера
