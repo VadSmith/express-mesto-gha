@@ -44,7 +44,7 @@ app.use((err, req, res, next) => {
 
   res.status(statusCode).send({
     message: statusCode === 500
-      ? 'На сервере произошла ошибка'
+      ? 'На стороне сервера произошла ошибка'
       : message,
   });
   next();

@@ -1,6 +1,5 @@
 const CastError = require('../errors/CastError');
-const NotFound = require('../errors/NotFound');
-const NotFoundError = require('../errors/NotFound');
+const NotFoundError = require('../errors/NotFoundError');
 const User = require('../models/user');
 
 // Обновить профиль
@@ -14,7 +13,7 @@ const patchUser = (req, res, next) => {
       // upsert: true // если пользователь не найден, он будет создан
     }
   ).
-    orfail(new NotFound("Ошибка: Пользователь не найден"))
+    orfail(new NotFoundError("Ошибка: Пользователь не найден"))
     .then(user => {
       // console.log(user);
       res.send(user)
