@@ -1,6 +1,5 @@
 const User = require('../models/user');
 
-
 // Обновить профиль
 const patchUser = (req, res, next) => {
   User.findByIdAndUpdate(
@@ -13,7 +12,7 @@ const patchUser = (req, res, next) => {
     }
   )
     .then(user => {
-      console.log(user);
+      // console.log(user);
       res.send(user)
     })
     // .catch(err => res.status(500).send(err.message))
@@ -35,6 +34,7 @@ const patchAvatar = (req, res, next) => {
     // .catch(err => res.status(500).send(err.message))
     .catch(err => next(err));
 };
+
 // Получение списка юзеров
 const getUsers = (req, res, next) => {
   User.find({})
@@ -57,13 +57,18 @@ const getUser = (req, res, next) => {
 const createUser = (req, res, next) => {
   // получим из объекта запроса имя и описание пользователя
   const { name, about, avatar } = req.body;
-  User.create({ name, about, avatar })
+  User.create({ name, about, avatar },
+    {
+      new: true, // обработчик then получит на вход обновлённую запись
+      runValidators: true, // данные будут валидированы перед изменением
+      // upsert: true // если пользователь не найден, он будет создан
+    }
+  )
     .then((user) => {
       res.send(user);
     }) // создадим документ на основе пришедших данных
     // .catch(() => res.status(400).send({ message: 'Произошла ошибка' }));
     .catch(err => next(err));
-
 };
 
 module.exports = {
