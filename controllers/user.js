@@ -2,7 +2,7 @@ const User = require('../models/user');
 
 
 // Обновить профиль
-const patchUser = (req, res) => {
+const patchUser = (req, res, next) => {
   User.findByIdAndUpdate(
     req.user._id,
     { "name": req.body.name, "about": req.body.about },
@@ -21,7 +21,7 @@ const patchUser = (req, res) => {
 };
 
 // Обновить аватар
-const patchAvatar = (req, res) => {
+const patchAvatar = (req, res, next) => {
   User.findByIdAndUpdate(
     req.user._id,
     { avatar: req.body.avatar },
@@ -36,7 +36,7 @@ const patchAvatar = (req, res) => {
     .catch(err => next(err));
 };
 // Получение списка юзеров
-const getUsers = (req, res) => {
+const getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send(users))
     // .catch((err) => res.status(500).send(err.message));
@@ -44,7 +44,7 @@ const getUsers = (req, res) => {
 };
 
 // Поиск юзера по ID
-const getUser = (req, res) => {
+const getUser = (req, res, next) => {
   User.findById(req.params.userId)
     .then((user) => {
       res.send(user)
@@ -54,7 +54,7 @@ const getUser = (req, res) => {
 };
 
 // Создание юзера
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   // получим из объекта запроса имя и описание пользователя
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
