@@ -35,8 +35,8 @@ app.patch('/404', (req, res) => {
   res.status(404).send({ message: "Обработка неправильного пути" })
 })
 app.use((err, req, res, next) => {
-  // console.log(err.message);
-  res.status(err.status).send({ message: err.message });
+  console.log(err.toString());
+  res.send({ message: err.toString() });
 })
 
 app.listen(PORT, () => {
