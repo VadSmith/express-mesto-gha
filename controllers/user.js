@@ -16,7 +16,8 @@ const patchUser = (req, res) => {
       console.log(user);
       res.send(user)
     })
-    .catch(err => res.status(500).send(err.message))
+    // .catch(err => res.status(500).send(err.message))
+    .catch(err => next(err));
 };
 
 // Обновить аватар
@@ -31,13 +32,15 @@ const patchAvatar = (req, res) => {
     }
   )
     .then(user => res.send(user))
-    .catch(err => res.status(500).send(err.message))
+    // .catch(err => res.status(500).send(err.message))
+    .catch(err => next(err));
 };
 // Получение списка юзеров
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send(users))
-    .catch((err) => res.status(500).send(err.message));
+    // .catch((err) => res.status(500).send(err.message));
+    .catch(err => next(err));
 };
 
 // Поиск юзера по ID
@@ -46,7 +49,8 @@ const getUser = (req, res) => {
     .then((user) => {
       res.send(user)
     })
-    .catch((err) => res.status(500).send({ message: err.name }));
+    // .catch((err) => res.status(500).send({ message: err.name }));
+    .catch(err => next(err));
 };
 
 // Создание юзера
@@ -57,7 +61,8 @@ const createUser = (req, res) => {
     .then((user) => {
       res.send(user);
     }) // создадим документ на основе пришедших данных
-    .catch(() => res.status(400).send({ message: 'Произошла ошибка' }));
+    // .catch(() => res.status(400).send({ message: 'Произошла ошибка' }));
+    .catch(err => next(err));
 
 };
 
