@@ -77,10 +77,10 @@ const likeCard = (req, res, next) => {
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
     { new: true },
   ).then((card) => {
-    // if (!card) {
-    //   return next(new NotFoundError("Карточки не существует"));
-    // }
     console.log(card);
+    if (!card) {
+      return next(new NotFoundError("Карточки не существует"));
+    }
     res.send(card)
   })
     .catch((err) => {
@@ -92,13 +92,25 @@ const likeCard = (req, res, next) => {
 }
 
 // Снятие лайка
-const dislikeCard = (req, res) => {
+const dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } }, // убрать _id из массива
     { new: true },
-  ).then((card) => res.send(card))
-    .catch((err) => res.status(500).send({ message: 'Произошла ошибка' }))
+  )
+    .then((card) => {
+      if (!card) {
+        return next(new NotFoundError("Карточки не существует"));
+      }
+      res.send(card)
+    }
+    )
+    .catch((err) => {
+      if (err.name === "CastError") {
+        return next(new CastError("Ошибка: Некорректный формат ID карточки"))
+      }
+    })
+  next(err)
 }
 
 module.exports = {
