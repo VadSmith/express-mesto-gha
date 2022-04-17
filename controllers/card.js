@@ -40,10 +40,10 @@ const createCard = (req, res, next) => {
     });
 };
 
+// Удаление карточки
 const deleteCard = (req, res, next) => {
   Card.deleteOne({ "_id": req.params.cardId })
     .then((result) => {
-      // console.log(`Deleted ${result.deletedCount} cards`);
       if (result.deletedCount > 0) {
         res.send({ message: 'Карточка удалена' })
       } else {
@@ -65,21 +65,22 @@ const getCard = (req, res) => {
       if (!card) {
         next(new NotFoundError("Карточки не существует"));
       }
-      res.send({ card })
+      res.send(card)
     })
     .catch((err) => res.status(500).send({ message: err.message }));
 };
 
+// Лайк карточке
 const likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
     { new: true },
   ).then((card) => {
-    if (!card) {
-      return next(new NotFoundError("Карточки не существует"));
-    }
-    // console.log(card);
+    // if (!card) {
+    //   return next(new NotFoundError("Карточки не существует"));
+    // }
+    console.log(card);
     res.send(card)
   })
     .catch((err) => {
@@ -90,12 +91,13 @@ const likeCard = (req, res, next) => {
   next(err);
 }
 
+// Снятие лайка
 const dislikeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } }, // убрать _id из массива
     { new: true },
-  ).then((card) => res.send({ card }))
+  ).then((card) => res.send(card))
     .catch((err) => res.status(500).send({ message: 'Произошла ошибка' }))
 }
 
