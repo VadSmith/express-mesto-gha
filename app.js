@@ -31,24 +31,24 @@ app.get('/', (req, res) => {
 
 app.use(require('./routes/card'));
 app.use(require('./routes/user'));
-// app.patch('/404', (req, res) => {
-//   res.status(404).send({ message: "Обработка неправильного пути" })
-// })
-// app.use((err, req, res, next) => {
-//   console.log(err.toString());
-//   res.send({ message: err.toString() });
-// })
+app.patch('/404', (req, res) => {
+  res.status(404).send({ message: "Обработка неправильного пути" })
+})
+app.use((err, req, res, next) => {
+  console.log(err.toString());
+  res.send({ message: err.toString() });
+})
 
-// app.use((err, req, res, next) => {
-//   const { statusCode = 500, message } = err;
+app.use((err, req, res, next) => {
+  const { statusCode = 500, message } = err;
 
-//   res.status(statusCode).send({
-//     message: statusCode === 500
-//       ? 'На стороне сервера произошла ошибка'
-//       : message,
-//   });
-//   next();
-// });
+  res.status(statusCode).send({
+    message: statusCode === 500
+      ? 'На стороне сервера произошла ошибка'
+      : message,
+  });
+  next();
+});
 
 process.on('uncaughtException', (err) => {
   console.error(err.stack);

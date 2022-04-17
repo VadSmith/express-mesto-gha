@@ -12,8 +12,8 @@ const patchUser = (req, res, next) => {
       runValidators: true, // данные будут валидированы перед изменением
       // upsert: true // если пользователь не найден, он будет создан
     }
-  ).
-    orfail(new NotFoundError("Ошибка: Пользователь не найден"))
+  )
+    .orFail(new NotFoundError("Ошибка: Пользователь не найден"))
     .then(user => {
       // console.log(user);
       res.send(user)
