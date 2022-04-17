@@ -70,13 +70,23 @@ const getCard = (req, res) => {
     .catch((err) => res.status(500).send({ message: err.message }));
 };
 
-const likeCard = (req, res) => {
+const likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
     { new: true },
-  ).then((card) => res.send({ card }))
-    .catch((err) => res.status(500).send({ message: 'Произошла ошибка' }))
+  ).then((card) => {
+    // if (!card) {
+    //   return next(new NotFoundError("Карточки не существует"));
+    // }
+    res.send({ card })
+  })
+    .catch((err) => {
+      if (err.name === "CastError") {
+        return next(new CastError("Ошибка: Некорректный формат ID карточки"))
+      }
+    })
+  next(err);
 }
 
 const dislikeCard = (req, res) => {
