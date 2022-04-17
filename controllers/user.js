@@ -49,6 +49,9 @@ const getUsers = (req, res, next) => {
 const getUser = (req, res, next) => {
   User.findById(req.params.userId)
     .then((user) => {
+      if (!user) {
+        res.status(404).send({ message: 'User not found' });
+      }
       res.send(user)
     })
     .catch((err) => {

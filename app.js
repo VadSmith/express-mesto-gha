@@ -39,22 +39,6 @@ app.use((err, req, res, next) => {
   res.send({ message: err.toString() });
 })
 
-app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
-
-  res.status(statusCode).send({
-    message: statusCode === 500
-      ? 'На стороне сервера произошла ошибка'
-      : message,
-  });
-  next();
-});
-
-process.on('uncaughtException', (err) => {
-  console.error(err.stack);
-  // console.log('Node NOT Exiting...');
-});
-
 app.listen(PORT, () => {
   console.log('Express is on port 3000!', BASE_URL);
 });
