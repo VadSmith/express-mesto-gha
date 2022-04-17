@@ -32,24 +32,23 @@ app.get('/', (req, res) => {
 app.use(require('./routes/card'));
 app.use(require('./routes/user'));
 
-app.patch('/404', (req, res) => {
-  res.status(404).send({ message: "Такой страницы не существует" })
-})
 
 app.use((err, req, res, next) => {
-  // console.log(err.toString());
-  res.status(err.status).send({ message: err.message });
+  // console.log('error:', err);
+  // res.status(err.status).send({ message: err.message });
+  next(err);
 })
 
-app.use((req, res) => {
-  res.status(404).send({ message: 'страница не найдена' });
-});
 
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
   res.status(statusCode)
     .send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
-  next();
+  // next();
+});
+
+app.use((req, res) => {
+  res.status(404).send({ message: 'Cтраница не найдена' });
 });
 
 app.listen(PORT, () => {

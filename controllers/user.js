@@ -15,17 +15,17 @@ const patchUser = (req, res, next) => {
     }
   )
     .then(user => {
-      // console.log(user);
+      if (!user) {
+        return next(new NotFoundError("Пользователь не найден"));
+      }
       res.send(user)
     })
-    // .catch(err => res.status(500).send(err.message))
     .catch((err) => {
       if (err.name === 'CastError') {
         return next(new CastError('Ошибка: Введен некорректный id пользователя'));
-
       };
       if (err.name === 'ValidationError') {
-        return next(new ValidationError('Ошибка: Введен некорректный id пользователя'));
+        return next(new ValidationError('Ошибка: Введены некорректные данные'));
       };
       next(err);
     });
@@ -42,14 +42,19 @@ const patchAvatar = (req, res, next) => {
       // upsert: true // если пользователь не найден, он будет создан
     }
   )
-    .then(user => res.send(user))
-    // .catch(err => res.status(500).send(err.message))
+    .then(user => {
+      if (!user) {
+        return next(new NotFoundError("Пользователь не найден"));
+      }
+      res.send(user)
+
+    })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new CastError('Ошибка: Введен некорректный id пользователя'));
+        return next(new CastError('Ошибка: Введен некорректный id пользователя'));
       };
       if (err.name === 'ValidationError') {
-        next(new ValidationError('Ошибка: Введен некорректный id пользователя'));
+        return next(new ValidationError('Ошибка: Введены некорректные данные'));
       };
       next(err);
     });
@@ -65,12 +70,6 @@ const getUsers = (req, res, next) => {
       res.send(users)
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        return next(new CastError('Ошибка: Введен некорректный id пользователя'));
-      };
-      if (err.name === 'ValidationError') {
-        return next(new ValidationError('Ошибка: Введен некорректный id пользователя'));
-      };
       next(err);
     });
 };
@@ -87,9 +86,6 @@ const getUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         return next(new CastError('Ошибка: Введен некорректный id пользователя'));
-      };
-      if (err.name === 'ValidationError') {
-        return next(new ValidationError('Ошибка: Введен некорректный id пользователя'));
       };
       next(err);
     });

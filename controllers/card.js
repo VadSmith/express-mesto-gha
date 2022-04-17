@@ -34,9 +34,15 @@ const deleteCard = (req, res) => {
 // Поиск карточки по ID
 const getCard = (req, res) => {
   Card.findById(req.params.cardId)
-    .then((card) => res.send({ card }))
-    .catch((err) => res.status(err.statusCode).send(err.message));
+    .then((card) => {
+      if (!card) {
+        next(new NotFoundError("Карточки не существует"));
+      }
+      res.send({ card })
+    })
+    .catch((err) => res.status(500).send({ message: err.message }));
 };
+
 const likeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
