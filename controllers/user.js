@@ -93,20 +93,23 @@ const getUser = (req, res, next) => {
 
 // Создание юзера
 const createUser = (req, res, next) => {
-  // получим из объекта запроса имя и описание пользователя
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar },
-    {
-      new: true, // обработчик then получит на вход обновлённую запись
-      runValidators: true, // данные будут валидированы перед изменением
-      upsert: true // если пользователь не найден, он будет создан
-    }
+    // {
+    //   new: true, // обработчик then получит на вход обновлённую запись
+    //   runValidators: true, // данные будут валидированы перед изменением
+    //   // upsert: true // если пользователь не найден, он будет создан
+    // }
   )
     .then((user) => {
       res.send(user);
-    }) // создадим документ на основе пришедших данных
-    // .catch(() => res.status(400).send({ message: 'Произошла ошибка' }));
-    .catch(err => next(err));
+    })
+    .catch(err => {
+      if (err.name === 'ValidationError') {
+        return next(new ValidationError('Ошибка: Введены некорректные данные'))
+      }
+      next(err);
+    })
 };
 
 module.exports = {

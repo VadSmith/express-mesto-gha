@@ -1,34 +1,61 @@
 const CastError = require('../errors/CastError');
 const NotFoundError = require('../errors/NotFoundError');
+const ValidationError = require('../errors/ValidationError');
 const Card = require('../models/card');
 
 // Получение списка карточек
 const getCards = (req, res) => {
   Card.find({})
-    .then((cards) => res.send(cards))
+    .then((cards) => {
+      if (!cards) {
+        return next(new NotFoundError("Карточки не найдены"));
+      }
+      res.send(cards)
+    })
     .catch((err) => {
       next(err);
     });
 };
 
-// // Создание карточки
-const createCard = (req, res) => {
+// Создание карточки
+const createCard = (req, res, next) => {
   // получим из объекта запроса имя и описание пользователя
   const { name, link } = req.body;
   const owner = req.user._id;
-  Card.create({ name, link, owner })
+  Card.create({ name, link, owner },
+    // {
+    // new: true, // обработчик then получит на вход обновлённую запись
+    // runValidators: true, // данные будут валидированы перед изменением
+    // upsert: true // если элемент не найден, он будет создан
+    // }
+  )
     .then((card) => {
-      res.status(200).send(card);
-    }) // создадим документ на основе пришедших данных
-    .catch(() => res.status(400).send({ message: 'Произошла ошибка' }));
+      res.send(card);
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return next(new ValidationError('Ошибка: Введены некорректные данные'))
+      }
+      next(err);
+    });
 };
 
-const deleteCard = (req, res) => {
+const deleteCard = (req, res, next) => {
   Card.deleteOne({ "_id": req.params.cardId })
-    .then(res.send({ message: 'Карточка удалена' }))
-    .catch((err) => next(err));
-
-  // .catch((err) => res.status(500).send({ err.message }))
+    .then((result) => {
+      // console.log(`Deleted ${result.deletedCount} cards`);
+      if (result.deletedCount > 0) {
+        res.send({ message: 'Карточка удалена' })
+      } else {
+        return next(new NotFoundError('Ошибка: Карточки с таким ID не найдено'))
+      }
+    })
+    .catch(err => {
+      if (err.name === "CastError") {
+        return next(new CastError("Ошибка: Некорректный формат ID карточки"))
+      }
+      next(err);
+    })
 }
 
 // Поиск карточки по ID
