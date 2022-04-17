@@ -13,7 +13,6 @@ const patchUser = (req, res, next) => {
       // upsert: true // если пользователь не найден, он будет создан
     }
   )
-    .orFail(new NotFoundError("Ошибка: Пользователь не найден"))
     .then(user => {
       // console.log(user);
       res.send(user)
@@ -41,7 +40,6 @@ const patchAvatar = (req, res, next) => {
 // Получение списка юзеров
 const getUsers = (req, res, next) => {
   User.find({})
-    .orFail(new NotFoundError('Ни одного пользователя не найдено'))
     .then((users) => res.send(users))
     // .catch((err) => res.status(500).send(err.message));
     .catch(err => next(err));
@@ -50,7 +48,6 @@ const getUsers = (req, res, next) => {
 // Поиск юзера по ID
 const getUser = (req, res, next) => {
   User.findById(req.params.userId)
-    .orFail(new NotFoundError('Пользователь не найден'))
     .then((user) => {
       res.send(user)
     })

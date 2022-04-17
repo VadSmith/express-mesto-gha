@@ -5,7 +5,6 @@ const Card = require('../models/card');
 // Получение списка карточек
 const getCards = (req, res) => {
   Card.find({})
-    .orFail(new NotFoundError("Ошибка: Ни одной карточки не найдено"))
     .then((cards) => res.send(cards))
     .catch((err) => {
       next(err);
