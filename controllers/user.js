@@ -41,7 +41,7 @@ const patchAvatar = (req, res, next) => {
 // Получение списка юзеров
 const getUsers = (req, res, next) => {
   User.find({})
-    .orFail(new NotFound('Ни одного пользователя не найдено'))
+    .orFail(new NotFoundError('Ни одного пользователя не найдено'))
     .then((users) => res.send(users))
     // .catch((err) => res.status(500).send(err.message));
     .catch(err => next(err));
@@ -50,7 +50,7 @@ const getUsers = (req, res, next) => {
 // Поиск юзера по ID
 const getUser = (req, res, next) => {
   User.findById(req.params.userId)
-    .orFail(new NotFound('Пользователь не найден'))
+    .orFail(new NotFoundError('Пользователь не найден'))
     .then((user) => {
       res.send(user)
     })
