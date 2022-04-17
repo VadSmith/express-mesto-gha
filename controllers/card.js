@@ -76,10 +76,11 @@ const likeCard = (req, res, next) => {
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
     { new: true },
   ).then((card) => {
-    // if (!card) {
-    //   return next(new NotFoundError("Карточки не существует"));
-    // }
-    res.send({ card })
+    if (!card) {
+      return next(new NotFoundError("Карточки не существует"));
+    }
+    // console.log(card);
+    res.send(card)
   })
     .catch((err) => {
       if (err.name === "CastError") {
