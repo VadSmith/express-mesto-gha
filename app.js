@@ -31,12 +31,14 @@ app.get('/', (req, res) => {
 
 app.use(require('./routes/card'));
 app.use(require('./routes/user'));
+
 app.patch('/404', (req, res) => {
-  res.status(404).send({ message: "Обработка неправильного пути" })
+  res.status(404).send({ message: "Такой страницы не существует" })
 })
+
 app.use((err, req, res, next) => {
-  console.log(err.toString());
-  res.send({ message: err.toString() });
+  // console.log(err.toString());
+  res.status(err.status).send({ message: err.message });
 })
 
 app.listen(PORT, () => {

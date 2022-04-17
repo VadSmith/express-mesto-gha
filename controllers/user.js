@@ -1,5 +1,6 @@
 const CastError = require('../errors/CastError');
 const NotFoundError = require('../errors/NotFoundError');
+const ValidationError = require('../errors/ValidationError');
 const User = require('../models/user');
 
 // Обновить профиль
@@ -50,16 +51,18 @@ const getUser = (req, res, next) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
-        res.status(404).send({ message: 'User not found' });
+        next(new NotFoundError("Пользователь не найден"));
       }
       res.send(user)
     })
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new CastError('Ошибка: Введен некорректный id пользователя'));
-      } else {
-        next(err);
-      }
+      };
+      if (err.name === 'ValidationError') {
+        next(new ValidationError('Ошибка: Введен некорректный id пользователя'));
+      };
+      next(err);
     });
 };
 
