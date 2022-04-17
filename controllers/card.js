@@ -87,8 +87,8 @@ const likeCard = (req, res, next) => {
       if (err.name === "CastError") {
         return next(new CastError("Ошибка: Некорректный формат ID карточки"))
       }
+      next(err);
     })
-  next(err);
 }
 
 // Снятие лайка
@@ -109,8 +109,8 @@ const dislikeCard = (req, res, next) => {
       if (err.name === "CastError") {
         return next(new CastError("Ошибка: Некорректный формат ID карточки"))
       }
+      next(err)
     })
-  next(err)
 }
 
 module.exports = {
