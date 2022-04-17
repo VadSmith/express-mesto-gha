@@ -21,10 +21,11 @@ const patchUser = (req, res, next) => {
     // .catch(err => res.status(500).send(err.message))
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new CastError('Ошибка: Введен некорректный id пользователя'));
+        return next(new CastError('Ошибка: Введен некорректный id пользователя'));
+
       };
       if (err.name === 'ValidationError') {
-        next(new ValidationError('Ошибка: Введен некорректный id пользователя'));
+        return next(new ValidationError('Ошибка: Введен некорректный id пользователя'));
       };
       next(err);
     });
@@ -57,14 +58,18 @@ const patchAvatar = (req, res, next) => {
 // Получение списка юзеров
 const getUsers = (req, res, next) => {
   User.find({})
-    .then((users) => res.send(users))
-    // .catch((err) => res.status(500).send(err.message));
+    .then((users) => {
+      if (!users) {
+        return next(new NotFoundError("Пользователей нет"));
+      }
+      res.send(users)
+    })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new CastError('Ошибка: Введен некорректный id пользователя'));
+        return next(new CastError('Ошибка: Введен некорректный id пользователя'));
       };
       if (err.name === 'ValidationError') {
-        next(new ValidationError('Ошибка: Введен некорректный id пользователя'));
+        return next(new ValidationError('Ошибка: Введен некорректный id пользователя'));
       };
       next(err);
     });
@@ -75,16 +80,16 @@ const getUser = (req, res, next) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
-        next(new NotFoundError("Пользователь не найден"));
+        return next(new NotFoundError("Пользователь не найден"));
       }
       res.send(user)
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new CastError('Ошибка: Введен некорректный id пользователя'));
+        return next(new CastError('Ошибка: Введен некорректный id пользователя'));
       };
       if (err.name === 'ValidationError') {
-        next(new ValidationError('Ошибка: Введен некорректный id пользователя'));
+        return next(new ValidationError('Ошибка: Введен некорректный id пользователя'));
       };
       next(err);
     });
