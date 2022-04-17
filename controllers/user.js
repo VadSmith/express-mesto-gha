@@ -19,7 +19,15 @@ const patchUser = (req, res, next) => {
       res.send(user)
     })
     // .catch(err => res.status(500).send(err.message))
-    .catch(err => next(err));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new CastError('Ошибка: Введен некорректный id пользователя'));
+      };
+      if (err.name === 'ValidationError') {
+        next(new ValidationError('Ошибка: Введен некорректный id пользователя'));
+      };
+      next(err);
+    });
 };
 
 // Обновить аватар
@@ -35,7 +43,15 @@ const patchAvatar = (req, res, next) => {
   )
     .then(user => res.send(user))
     // .catch(err => res.status(500).send(err.message))
-    .catch(err => next(err));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new CastError('Ошибка: Введен некорректный id пользователя'));
+      };
+      if (err.name === 'ValidationError') {
+        next(new ValidationError('Ошибка: Введен некорректный id пользователя'));
+      };
+      next(err);
+    });
 };
 
 // Получение списка юзеров
@@ -43,7 +59,15 @@ const getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send(users))
     // .catch((err) => res.status(500).send(err.message));
-    .catch(err => next(err));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new CastError('Ошибка: Введен некорректный id пользователя'));
+      };
+      if (err.name === 'ValidationError') {
+        next(new ValidationError('Ошибка: Введен некорректный id пользователя'));
+      };
+      next(err);
+    });
 };
 
 // Поиск юзера по ID
