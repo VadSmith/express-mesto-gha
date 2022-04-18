@@ -99,11 +99,11 @@ const createUser = (req, res, next) => {
     {
       new: true,
       runValidators: true,
-      // upsert: true
+      upsert: true
     }
   ).then((user) => {
     console.log(user)
-    res.send(user);
+    res.send(user[0]);
   }).catch(err => {
     console.log(err.toString());
     if (err.name === 'ValidationError') {

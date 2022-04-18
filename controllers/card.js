@@ -22,15 +22,16 @@ const createCard = (req, res, next) => {
   // получим из объекта запроса имя и описание пользователя
   const { name, link } = req.body;
   const owner = req.user._id;
-  Card.create({ name, link, owner },
-    // {
-    // new: true, // обработчик then получит на вход обновлённую запись
-    // runValidators: true, // данные будут валидированы перед изменением
-    // upsert: true // если элемент не найден, он будет создан
-    // }
+  Card.create(
+    [{ name, link, owner }],
+    {
+      new: true, // обработчик then получит на вход обновлённую запись
+      runValidators: true, // данные будут валидированы перед изменением
+      upsert: true // если элемент не найден, он будет создан
+    }
   )
     .then((card) => {
-      res.send(card);
+      res.send(card[0]);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
