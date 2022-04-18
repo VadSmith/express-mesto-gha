@@ -99,9 +99,10 @@ const createUser = (req, res, next) => {
     {
       new: true,
       runValidators: true,
-      upsert: true
+      // upsert: true
     }
   ).then((user) => {
+    console.log(user)
     res.send(user);
   }).catch(err => {
     console.log(err.toString());
