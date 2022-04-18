@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 const CastError = require('../errors/CastError');
 const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
@@ -14,14 +15,12 @@ const patchUser = (req, res, next) => {
       // upsert: true // если пользователь не найден, он будет создан
     },
   )
-    // eslint-disable-next-line consistent-return
     .then((user) => {
       if (!user) {
         return next(new NotFoundError('Пользователь не найден'));
       }
       res.send(user);
     })
-    // eslint-disable-next-line consistent-return
     .catch((err) => {
       if (err.name === 'CastError') {
         return next(new CastError('Ошибка: Введен некорректный id пользователя'));
@@ -44,14 +43,12 @@ const patchAvatar = (req, res, next) => {
       // upsert: true
     },
   )
-    // eslint-disable-next-line consistent-return
     .then((user) => {
       if (!user) {
         return next(new NotFoundError('Пользователь не найден'));
       }
       res.send(user);
     })
-    // eslint-disable-next-line consistent-return
     .catch((err) => {
       if (err.name === 'CastError') {
         return next(new CastError('Ошибка: Введен некорректный id пользователя'));
@@ -66,7 +63,6 @@ const patchAvatar = (req, res, next) => {
 // Получение списка юзеров
 const getUsers = (req, res, next) => {
   User.find({})
-    // eslint-disable-next-line consistent-return
     .then((users) => {
       if (!users) {
         return next(new NotFoundError('Пользователей нет'));
@@ -81,14 +77,12 @@ const getUsers = (req, res, next) => {
 // Поиск юзера по ID
 const getUser = (req, res, next) => {
   User.findById(req.params.userId)
-    // eslint-disable-next-line consistent-return
     .then((user) => {
       if (!user) {
         return next(new NotFoundError('Пользователь не найден'));
       }
       res.send(user);
     })
-    // eslint-disable-next-line consistent-return
     .catch((err) => {
       if (err.name === 'CastError') {
         return next(new CastError('Ошибка: Введен некорректный id пользователя'));
@@ -103,13 +97,8 @@ const createUser = (req, res, next) => {
   User.create(
     { name, about, avatar },
   ).then((user) => {
-    // eslint-disable-next-line no-console
-    // console.log(user);
     res.send(user);
-    // eslint-disable-next-line consistent-return
   }).catch((err) => {
-    // eslint-disable-next-line no-console
-    console.log(err.toString());
     if (err.name === 'ValidationError') {
       return next(new ValidationError('Ошибка: Введены некорректные данные!'));
     }
