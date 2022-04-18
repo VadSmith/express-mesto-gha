@@ -7,26 +7,28 @@ const User = require('../models/user');
 const patchUser = (req, res, next) => {
   User.findByIdAndUpdate(
     req.user._id,
-    { "name": req.body.name, "about": req.body.about },
+    { name: req.body.name, about: req.body.about },
     {
       new: true, // обработчик then получит на вход обновлённую запись
       runValidators: true, // данные будут валидированы перед изменением
       // upsert: true // если пользователь не найден, он будет создан
-    }
+    },
   )
-    .then(user => {
+    // eslint-disable-next-line consistent-return
+    .then((user) => {
       if (!user) {
-        return next(new NotFoundError("Пользователь не найден"));
+        return next(new NotFoundError('Пользователь не найден'));
       }
-      res.send(user)
+      res.send(user);
     })
+    // eslint-disable-next-line consistent-return
     .catch((err) => {
       if (err.name === 'CastError') {
         return next(new CastError('Ошибка: Введен некорректный id пользователя'));
-      };
+      }
       if (err.name === 'ValidationError') {
         return next(new ValidationError('Ошибка: Введены некорректные данные'));
-      };
+      }
       next(err);
     });
 };
@@ -40,22 +42,23 @@ const patchAvatar = (req, res, next) => {
       new: true,
       runValidators: true,
       // upsert: true
-    }
+    },
   )
-    .then(user => {
+    // eslint-disable-next-line consistent-return
+    .then((user) => {
       if (!user) {
-        return next(new NotFoundError("Пользователь не найден"));
+        return next(new NotFoundError('Пользователь не найден'));
       }
-      res.send(user)
-
+      res.send(user);
     })
+    // eslint-disable-next-line consistent-return
     .catch((err) => {
       if (err.name === 'CastError') {
         return next(new CastError('Ошибка: Введен некорректный id пользователя'));
-      };
+      }
       if (err.name === 'ValidationError') {
         return next(new ValidationError('Ошибка: Введены некорректные данные'));
-      };
+      }
       next(err);
     });
 };
@@ -63,11 +66,12 @@ const patchAvatar = (req, res, next) => {
 // Получение списка юзеров
 const getUsers = (req, res, next) => {
   User.find({})
+    // eslint-disable-next-line consistent-return
     .then((users) => {
       if (!users) {
-        return next(new NotFoundError("Пользователей нет"));
+        return next(new NotFoundError('Пользователей нет'));
       }
-      res.send(users)
+      res.send(users);
     })
     .catch((err) => {
       next(err);
@@ -77,16 +81,18 @@ const getUsers = (req, res, next) => {
 // Поиск юзера по ID
 const getUser = (req, res, next) => {
   User.findById(req.params.userId)
+    // eslint-disable-next-line consistent-return
     .then((user) => {
       if (!user) {
-        return next(new NotFoundError("Пользователь не найден"));
+        return next(new NotFoundError('Пользователь не найден'));
       }
-      res.send(user)
+      res.send(user);
     })
+    // eslint-disable-next-line consistent-return
     .catch((err) => {
       if (err.name === 'CastError') {
         return next(new CastError('Ошибка: Введен некорректный id пользователя'));
-      };
+      }
       next(err);
     });
 };
@@ -95,22 +101,20 @@ const getUser = (req, res, next) => {
 const createUser = (req, res, next) => {
   const { name, about, avatar } = req.body;
   User.create(
-    [{ name, about, avatar }],
-    {
-      new: true,
-      runValidators: true,
-      upsert: true
-    }
+    { name, about, avatar },
   ).then((user) => {
-    console.log(user)
-    res.send(user[0]);
-  }).catch(err => {
+    // eslint-disable-next-line no-console
+    console.log(user);
+    res.send(user);
+    // eslint-disable-next-line consistent-return
+  }).catch((err) => {
+    // eslint-disable-next-line no-console
     console.log(err.toString());
     if (err.name === 'ValidationError') {
-      return next(new ValidationError('Ошибка: Введены некорректные данные!'))
+      return next(new ValidationError('Ошибка: Введены некорректные данные!'));
     }
     next(err);
-  })
+  });
 };
 
 module.exports = {
@@ -118,5 +122,5 @@ module.exports = {
   getUser,
   getUsers,
   patchUser,
-  patchAvatar
-}
+  patchAvatar,
+};

@@ -1,11 +1,11 @@
 const express = require('express');
-const path = require('path');
 const mongoose = require('mongoose');
+// eslint-disable-next-line import/no-extraneous-dependencies
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+
 const { PORT = 3000, BASE_URL = 'http://localhost:3000' } = process.env;
 const app = express();
-
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
@@ -20,37 +20,26 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use((req, res, next) => {
   req.user = {
     // вставьте сюда _id созданного в предыдущем пункте пользователя
-    _id: '625988c51279959a16458236'
+    _id: '625988c51279959a16458236',
   };
   next();
-});
-
-app.get('/', (req, res) => {
-  res.send('Root / Main Page');
 });
 
 app.use(require('./routes/card'));
 app.use(require('./routes/user'));
 
+app.use((req, res) => {
+  res.status(404).send({ message: 'Cтраница не найдена' });
+});
 
-app.use((err, req, res, next) => {
-  // console.log('error:', err);
-  // res.status(err.status).send({ message: err.message });
-  next(err);
-})
-
-
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   const { statusCode = 500, message } = err;
   res.status(statusCode)
     .send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
   // next();
 });
 
-app.use((req, res) => {
-  res.status(404).send({ message: 'Cтраница не найдена' });
-});
-
 app.listen(PORT, () => {
+  // eslint-disable-next-line no-console
   console.log('Express is on port 3000!', BASE_URL);
 });

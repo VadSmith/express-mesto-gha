@@ -1,3 +1,7 @@
+/* eslint-disable comma-dangle */
+/* eslint-disable eol-last */
+/* eslint-disable no-undef */
+/* eslint-disable consistent-return */
 const CastError = require('../errors/CastError');
 const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
@@ -8,11 +12,12 @@ const getCards = (req, res) => {
   Card.find({})
     .then((cards) => {
       if (!cards) {
-        return next(new NotFoundError("Карточки не найдены"));
+        return next(new NotFoundError('Карточки не найдены'));
       }
-      res.send(cards)
+      res.send(cards);
     })
     .catch((err) => {
+      // eslint-disable-next-line no-undef
       next(err);
     });
 };
@@ -23,19 +28,15 @@ const createCard = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
   Card.create(
-    [{ name, link, owner }],
-    {
-      new: true, // обработчик then получит на вход обновлённую запись
-      runValidators: true, // данные будут валидированы перед изменением
-      upsert: true // если элемент не найден, он будет создан
-    }
+    { name, link, owner },
   )
     .then((card) => {
-      res.send(card[0]);
+      res.send(card);
     })
+    // eslint-disable-next-line consistent-return
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return next(new ValidationError('Ошибка: Введены некорректные данные'))
+        return next(new ValidationError('Ошибка: Введены некорректные данные'));
       }
       next(err);
     });
@@ -43,30 +44,30 @@ const createCard = (req, res, next) => {
 
 // Удаление карточки
 const deleteCard = (req, res, next) => {
-  Card.deleteOne({ "_id": req.params.cardId })
+  Card.deleteOne({ _id: req.params.cardId })
     .then((result) => {
       if (result.deletedCount > 0) {
-        res.send({ message: 'Карточка удалена' })
+        res.send({ message: 'Карточка удалена' });
       } else {
-        return next(new NotFoundError('Ошибка: Карточки с таким ID не найдено'))
+        return next(new NotFoundError('Ошибка: Карточки с таким ID не найдено'));
       }
     })
-    .catch(err => {
-      if (err.name === "CastError") {
-        return next(new CastError("Ошибка: Некорректный формат ID карточки"))
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return next(new CastError('Ошибка: Некорректный формат ID карточки'));
       }
       next(err);
-    })
-}
+    });
+};
 
 // Поиск карточки по ID
 const getCard = (req, res) => {
   Card.findById(req.params.cardId)
     .then((card) => {
       if (!card) {
-        next(new NotFoundError("Карточки не существует"));
+        next(new NotFoundError('Карточки не существует'));
       }
-      res.send(card)
+      res.send(card);
     })
     .catch((err) => res.status(500).send({ message: err.message }));
 };
@@ -78,19 +79,20 @@ const likeCard = (req, res, next) => {
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
     { new: true },
   ).then((card) => {
+    // eslint-disable-next-line no-console
     console.log(card);
     if (!card) {
-      return next(new NotFoundError("Карточки не существует"));
+      return next(new NotFoundError('Карточки не существует'));
     }
-    res.send(card)
+    res.send(card);
   })
     .catch((err) => {
-      if (err.name === "CastError") {
-        return next(new CastError("Ошибка: Некорректный формат ID карточки"))
+      if (err.name === 'CastError') {
+        return next(new CastError('Ошибка: Некорректный формат ID карточки'));
       }
       next(err);
-    })
-}
+    });
+};
 
 // Снятие лайка
 const dislikeCard = (req, res, next) => {
@@ -101,18 +103,17 @@ const dislikeCard = (req, res, next) => {
   )
     .then((card) => {
       if (!card) {
-        return next(new NotFoundError("Карточки не существует"));
+        return next(new NotFoundError('Карточки не существует'));
       }
-      res.send(card)
-    }
-    )
-    .catch((err) => {
-      if (err.name === "CastError") {
-        return next(new CastError("Ошибка: Некорректный формат ID карточки"))
-      }
-      next(err)
+      res.send(card);
     })
-}
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return next(new CastError('Ошибка: Некорректный формат ID карточки'));
+      }
+      next(err);
+    });
+};
 
 module.exports = {
   deleteCard,
@@ -121,4 +122,4 @@ module.exports = {
   getCard,
   likeCard,
   dislikeCard
-}
+};

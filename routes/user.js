@@ -1,5 +1,7 @@
 const router = require('express').Router();
-const { getUsers, getUser, createUser, patchUser, patchAvatar } = require('../controllers/user');
+const {
+  getUsers, getUser, createUser, patchUser, patchAvatar,
+} = require('../controllers/user');
 
 module.exports = router;
 
@@ -16,4 +18,4 @@ router.post('/users', createUser);
 router.patch('/users/me', patchUser);
 
 // Обновление аватара
-router.patch('/users/me/avatar', patchAvatar)
+router.patch('/users/me/avatar', patchAvatar);
