@@ -104,7 +104,7 @@ const createUser = (req, res, next) => {
     { name, about, avatar },
   ).then((user) => {
     // eslint-disable-next-line no-console
-    console.log(user);
+    // console.log(user);
     res.send(user);
     // eslint-disable-next-line consistent-return
   }).catch((err) => {
