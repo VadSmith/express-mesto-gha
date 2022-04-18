@@ -37,9 +37,9 @@ const patchAvatar = (req, res, next) => {
     req.user._id,
     { avatar: req.body.avatar },
     {
-      new: true, // обработчик then получит на вход обновлённую запись
-      runValidators: true, // данные будут валидированы перед изменением
-      // upsert: true // если пользователь не найден, он будет создан
+      new: true,
+      runValidators: true,
+      // upsert: true
     }
   )
     .then(user => {
@@ -95,17 +95,15 @@ const getUser = (req, res, next) => {
 const createUser = (req, res, next) => {
   const { name, about, avatar } = req.body;
   User.create(
-    { name, about, avatar },
+    [{ name, about, avatar }],
     {
       new: true,
       runValidators: true,
       upsert: true
     }
   ).then((user) => {
-    console.log(user);
     res.send(user);
   }).catch(err => {
-    console.log(name, about, avatar);
     console.log(err.toString());
     if (err.name === 'ValidationError') {
       return next(new ValidationError('Ошибка: Введены некорректные данные!'))
