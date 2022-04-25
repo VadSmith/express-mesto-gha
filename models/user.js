@@ -22,8 +22,9 @@ const userSchema = new mongoose.Schema({
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
   },
   email: {
-    unique: true,
+    type: String,
     required: true,
+    unique: true,
     validate: {
       validator(v) {
         return validator.isEmail(v);
@@ -32,6 +33,7 @@ const userSchema = new mongoose.Schema({
     message: 'Введите корректный email',
   },
   password: {
+    type: String,
     required: true,
   },
 
