@@ -1,9 +1,27 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken')
 /* eslint-disable consistent-return */
 const CastError = require('../errors/CastError');
 const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
 const User = require('../models/user');
+
+const JWT_SECRET = 'verysecretphrase';
+
+const login = (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) return res.status(400).send({ message: 'Email или пароль не передан' });
+  User.findOne({ email })
+    .then((user) => {
+      if (!user) return res.status(401).send({ message: 'Неправильная почта или пароль' });
+      return bcrypt.compare(password, user.password)
+        .then(isValidPassword => {
+          if (!isValidPassword) return res.status(401).send({ message: 'Неправильный email или пароль' });
+          const token = jwt.sign({ user._id }, JWT_SECRET);
+          return res.status(200).send({ token });
+        })
+    });
+};
 
 // Обновить профиль
 const patchUser = (req, res, next) => {
