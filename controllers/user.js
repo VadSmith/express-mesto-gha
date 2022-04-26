@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken')
 const CastError = require('../errors/CastError');
 const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
+const UserExistsError = require('../errors/UserExistsError');
 const User = require('../models/user');
 
 const JWT_SECRET = 'verysecretphrase';
@@ -15,11 +16,11 @@ const login = (req, res) => {
     .then((user) => {
       if (!user) return res.status(401).send({ message: 'Неправильная почта или пароль' });
       return bcrypt.compare(password, user.password)
-        .then(isValidPassword => {
+        .then((isValidPassword) => {
           if (!isValidPassword) return res.status(401).send({ message: 'Неправильный email или пароль' });
-          const token = jwt.sign({ user._id }, JWT_SECRET);
+          const token = jwt.sign({ _id: user._id }, JWT_SECRET);
           return res.status(200).send({ token });
-        })
+        });
     });
 };
 
@@ -124,6 +125,10 @@ const createUser = (req, res, next) => {
     .then((user) => {
       res.send(user);
     }).catch((err) => {
+      if (err.name === 'MongoServerError' && err.code === 11000) {
+        // console.log(err);
+        return next(new UserExistsError('Этот email уже занят'));
+      }
       if (err.name === 'ValidationError') {
         return next(new ValidationError('Ошибка: Введены некорректные данные!'));
       }
@@ -137,4 +142,5 @@ module.exports = {
   getUsers,
   patchUser,
   patchAvatar,
+  login,
 };
