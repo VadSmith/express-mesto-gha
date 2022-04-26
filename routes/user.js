@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const {
-  getUsers, getUser, createUser, patchUser, patchAvatar,
+  getUsers, getUser, patchUser, patchAvatar,
+  // getUsers, getUser, createUser, patchUser, patchAvatar,
 } = require('../controllers/user');
 
 module.exports = router;
