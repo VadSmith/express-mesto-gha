@@ -14,11 +14,11 @@ const login = (req, res) => {
   if (!email || !password) return res.status(400).send({ message: 'Email или пароль не передан' });
   User.findOne({ email })
     .then((user) => {
-      if (!user) return res.status(401).send({ message: 'Неправильная почта или пароль' });
+      if (!user) return res.status(401).send({ message: 'Неправильный email или пароль' });
       return bcrypt.compare(password, user.password)
         .then((isValidPassword) => {
           if (!isValidPassword) return res.status(401).send({ message: 'Неправильный email или пароль' });
-          const token = jwt.sign({ _id: user._id }, JWT_SECRET);
+          const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
           return res.status(200).send({ token });
         });
     });

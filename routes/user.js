@@ -12,7 +12,7 @@ router.get('/users', getUsers);
 router.get('/users/:userId', getUser);
 
 // Создание юзера
-router.post('/users', createUser);
+// router.post('/users', createUser);
 
 // Обновление профиля юзера
 router.patch('/users/me', patchUser);
