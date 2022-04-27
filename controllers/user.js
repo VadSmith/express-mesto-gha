@@ -25,6 +25,11 @@ const login = (req, res) => {
               httpOnly: true,
               sameSite: true,
             })
+            // .catch((err) => {
+            //   res
+            //     .status(401)
+            //     .send({ message: err.message });
+            // })
             .end();
 
           // return res.status(200).send({ token });
@@ -151,4 +156,5 @@ module.exports = {
   patchUser,
   patchAvatar,
   login,
+  JWT_SECRET,
 };
