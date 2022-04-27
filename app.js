@@ -19,20 +19,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// app.use((req, res, next) => {
-//   req.user = {
-//     // вставьте сюда _id созданного в предыдущем пункте пользователя
-//     _id: '625988c51279959a16458236',
-//   };
-//   next();
-// });
-// app.use((req, res, next) => {
-//   // res.status(200).send({ message: req.cookies });
-//   console.log(req.cookies.jwt);
-//   res.status(200);
-//   next();
-// });
-
 app.post('/signin', login);
 app.post('/signup', createUser);
 
