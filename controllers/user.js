@@ -12,7 +12,7 @@ const JWT_SECRET = 'verysecretphrase';
 const login = (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) return res.status(400).send({ message: 'Email или пароль не могут быть пустыми' });
-  User.findOne({ email })
+  User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) return res.status(401).send({ message: 'Неправильный email или пароль' });
       return bcrypt.compare(password, user.password)
