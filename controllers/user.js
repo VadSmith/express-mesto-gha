@@ -152,6 +152,7 @@ const createUser = (req, res, next) => {
       {
         name, about, avatar, email, password: hash,
       },
+      { new: true, runValidators: true },
     ))
     .then((user) => {
       res.send(user);
