@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const {
-  getUsers, getUser, patchUser, patchAvatar,
-  // getUsers, getUser, createUser, patchUser, patchAvatar,
+  getUsers, getUser, patchUser, patchAvatar, getUsersMe,
 } = require('../controllers/user');
 
 module.exports = router;
@@ -18,6 +17,9 @@ router.get('/users/:userId', getUser);
 
 // Обновление профиля юзера
 router.patch('/users/me', patchUser);
+
+// Получение своего профиля
+router.get('/users/me', getUsersMe);
 
 // Обновление аватара
 router.patch('/users/me/avatar', patchAvatar);

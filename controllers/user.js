@@ -107,6 +107,24 @@ const getUsers = (req, res, next) => {
     });
 };
 
+const getUsersMe = (req, res, next) => {
+  console.log('getUsersMe', req);
+  User.findById(req.user._id)
+    .then((user) => {
+      if (!user) {
+        return next(new NotFoundError('Пользователь не найден'));
+      }
+      // console.log(user);
+      res.send(user);
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return next(new CastError('Ошибка: Введен некорректный id пользователя'));
+      }
+      next(err);
+    });
+};
+
 // Поиск юзера по ID
 const getUser = (req, res, next) => {
   User.findById(req.params.userId)
@@ -153,6 +171,7 @@ module.exports = {
   createUser,
   getUser,
   getUsers,
+  getUsersMe,
   patchUser,
   patchAvatar,
   login,
