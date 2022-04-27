@@ -11,6 +11,7 @@ router.get('/users', getUsers);
 
 // Получение юзера по ID
 router.get('/users/:userId', getUser);
+// router.get('/users/me', getMe);
 
 // Создание юзера
 // router.post('/users', createUser);
