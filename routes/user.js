@@ -5,6 +5,9 @@ const {
 
 module.exports = router;
 
+// Получение своего профиля
+router.get('/users/me', getUsersMe);
+
 // Получение всех юзеров
 router.get('/users', getUsers);
 
@@ -17,9 +20,6 @@ router.get('/users/:userId', getUser);
 
 // Обновление профиля юзера
 router.patch('/users/me', patchUser);
-
-// Получение своего профиля
-router.get('/users/me', getUsersMe);
 
 // Обновление аватара
 router.patch('/users/me/avatar', patchAvatar);

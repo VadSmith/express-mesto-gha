@@ -108,7 +108,7 @@ const getUsers = (req, res, next) => {
 };
 
 const getUsersMe = (req, res, next) => {
-  console.log('getUsersMe', req);
+  console.log('getUsersMe', req.user._id);
   User.findById(req.user._id)
     .then((user) => {
       if (!user) {
@@ -119,7 +119,7 @@ const getUsersMe = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return next(new CastError('Ошибка: Введен некорректный id пользователя'));
+        return next(new CastError('Ошибка: Введен некорректный id пользователя!'));
       }
       next(err);
     });
