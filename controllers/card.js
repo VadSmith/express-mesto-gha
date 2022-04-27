@@ -5,6 +5,7 @@
 const CastError = require('../errors/CastError');
 const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
+const ForbiddenError = require('../errors/ForbiddenError');
 const Card = require('../models/card');
 
 // Получение списка карточек
@@ -44,12 +45,12 @@ const createCard = (req, res, next) => {
 
 // Удаление карточки
 const deleteCard = (req, res, next) => {
-  Card.deleteOne({ _id: req.params.cardId })
+  Card.deleteOne({ _id: req.params.cardId, owner: req.user._id })
     .then((result) => {
       if (result.deletedCount > 0) {
         res.send({ message: 'Карточка удалена' });
       } else {
-        return next(new NotFoundError('Ошибка: Карточки с таким ID не найдено'));
+        return next(new ForbiddenError('Недостаточно прав'));
       }
     })
     .catch((err) => {
