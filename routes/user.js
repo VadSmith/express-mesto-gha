@@ -19,9 +19,6 @@ router.get('/users/:userId', celebrate({
   }),
 }), getUser);
 
-// Создание юзера
-// router.post('/users', createUser);
-
 // Обновление профиля юзера
 router.patch('/users/me', patchUser);
 
