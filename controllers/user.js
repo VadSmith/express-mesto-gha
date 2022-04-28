@@ -126,14 +126,17 @@ const getUsersMe = (req, res, next) => {
 
 // Поиск юзера по ID
 const getUser = (req, res, next) => {
-  User.findById(req.params.userId)
+  User.findById({ _id: req.params.userId })
     .then((user) => {
+      // console.log(user);
       if (!user) {
         return next(new NotFoundError('Пользователь не найден'));
+        // throw new NotFoundError('Пользователь не найден');
       }
       res.send(user);
     })
     .catch((err) => {
+      // console.log(err);
       // if (err.name === 'CastError') {
       //   return next(new CastError('Ошибка: Введен некорректный id пользователя'));
       // }

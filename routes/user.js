@@ -15,7 +15,7 @@ router.get('/users', getUsers);
 // Получение юзера по ID
 router.get('/users/:userId', celebrate({
   params: Joi.object().keys({
-    _id: Joi.string().required().alphanum().length(24),
+    userId: Joi.string().required().alphanum().length(24),
   }),
 }), getUser);
 
