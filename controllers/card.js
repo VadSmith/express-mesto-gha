@@ -5,7 +5,7 @@
 const CastError = require('../errors/CastError');
 const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
-const ForbiddenError = require('../errors/ForbiddenError');
+// const ForbiddenError = require('../errors/ForbiddenError');
 const Card = require('../models/card');
 
 // Получение списка карточек
@@ -61,32 +61,47 @@ const createCard = (req, res, next) => {
 //       next(err);
 //     });
 // };
+
 const deleteCard = (req, res, next) => {
-  Сard.findById(req.params.cardId)
-    .then((card) => {
-      console.log(card);
-      if (!card) {
+  Card.deleteOne({ _id: req.params.cardId })
+    .then((result) => {
+      if (result.deletedCount > 0) {
+        res.status(200).send('Карточка удалена');
+      } else {
         throw new NotFoundError('Карточка с указанным _id не найдена');
-        // return next(new NotFoundError('Карточка с указанным _id не найдена'));
       }
-      if (!card.owner.equals(req.user._id)) {
-        console.log(!card.owner.equals(req.user._id));
-        throw new ForbiddenError('Невозможно удалить чужую карточку');
-        // return next(new ForbiddenError('Невозможно удалить чужую карточку'));
-      }
-      return card
-        .remove()
-        .then(() => res.status(200).send(card));
-    })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        // next(new CastError('Ошибка: Некорректный формат ID карточки'));
-        return next(new CastError('Ошибка: Некорректный формат ID карточки'));
-      }
-      // return next(err);
-      next(err);
+    }).catch((err) => {
+      console.log(err);
+      return next(err);
     });
 };
+
+// const deleteCard = (req, res, next) => {
+//   Сard.findById(req.params.cardId)
+//     .then((card) => {
+//       console.log(card);
+//       if (!card) {
+//         throw new NotFoundError('Карточка с указанным _id не найдена');
+//         // return next(new NotFoundError('Карточка с указанным _id не найдена'));
+//       }
+//       if (!card.owner.equals(req.user._id)) {
+//         console.log(!card.owner.equals(req.user._id));
+//         throw new ForbiddenError('Невозможно удалить чужую карточку');
+//         // return next(new ForbiddenError('Невозможно удалить чужую карточку'));
+//       }
+//       return card
+//         .remove()
+//         .then(() => res.status(200).send(card));
+//     })
+//     .catch((err) => {
+//       if (err.name === 'CastError') {
+//         // next(new CastError('Ошибка: Некорректный формат ID карточки'));
+//         return next(new CastError('Ошибка: Некорректный формат ID карточки'));
+//       }
+//       // return next(err);
+//       next(err);
+//     });
+// };
 
 // Поиск карточки по ID
 const getCard = (req, res) => {
