@@ -16,7 +16,7 @@ module.exports = router;
 router.get('/cards', getCards);
 
 router.delete('/cards/:cardId', celebrate({
-  body: Joi.object().keys({
+  params: Joi.object().keys({
     _id: Joi.string().required().alphanum().length(24),
   }),
 }), deleteCard);
@@ -36,13 +36,13 @@ router.post(
 );
 
 router.put('/cards/:cardId/likes', celebrate({
-  body: Joi.object().keys({
-    _id: Joi.string().required().alphanum().length(24),
+  params: Joi.object().keys({
+    cardId: Joi.string().required().alphanum().length(24),
   }),
 }), likeCard);
 
 router.delete('/cards/:cardId/likes', celebrate({
-  body: Joi.object().keys({
-    _id: Joi.string().required().alphanum().length(24),
+  params: Joi.object().keys({
+    cardId: Joi.string().required().alphanum().length(24),
   }),
 }), dislikeCard);

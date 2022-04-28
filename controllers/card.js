@@ -127,7 +127,7 @@ const dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } }, // убрать _id из массива
-    { new: true },
+    // { new: true },
   )
     .then((card) => {
       if (!card) {
