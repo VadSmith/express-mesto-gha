@@ -64,13 +64,15 @@ const createCard = (req, res, next) => {
 const deleteCard = (req, res, next) => {
   Сard.findById(req.params.cardId)
     .then((card) => {
+      console.log(card);
       if (!card) {
-        // throw new NotFoundError('Карточка с указанным _id не найдена');
-        return next(new NotFoundError('Карточка с указанным _id не найдена'));
+        throw new NotFoundError('Карточка с указанным _id не найдена');
+        // return next(new NotFoundError('Карточка с указанным _id не найдена'));
       }
       if (!card.owner.equals(req.user._id)) {
-        // throw new ForbiddenError('Невозможно удалить чужую карточку');
-        return next(new ForbiddenError('Невозможно удалить чужую карточку'));
+        console.log(!card.owner.equals(req.user._id));
+        throw new ForbiddenError('Невозможно удалить чужую карточку');
+        // return next(new ForbiddenError('Невозможно удалить чужую карточку'));
       }
       return card
         .remove()
@@ -78,9 +80,11 @@ const deleteCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
+        // next(new CastError('Ошибка: Некорректный формат ID карточки'));
         return next(new CastError('Ошибка: Некорректный формат ID карточки'));
       }
-      return next(err);
+      // return next(err);
+      next(err);
     });
 };
 
