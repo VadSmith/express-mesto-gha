@@ -19,7 +19,7 @@ const login = (req, res) => {
         .then((isValidPassword) => {
           if (!isValidPassword) return res.status(401).send({ message: 'Неправильный email или пароль' });
           const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
-          return res.status(200)
+          return res.status(200).send({ message: 'Успешный вход' })
             .cookie('jwt', token, {
               maxAge: 3600000,
               httpOnly: true,
