@@ -42,9 +42,9 @@ app.use(auth);
 app.use(require('./routes/card'));
 app.use(require('./routes/user'));
 
-app.patch('/404', (req, res) => {
-  res.status(404).send({ message: 'Cтраница не найдена' });
-});
+// app.patch('/404', (req, res) => {
+//   res.status(404).send({ message: 'Cтраница не найдена' });
+// });
 app.use((req, res) => {
   res.status(404).send({ message: 'Cтраница не найдена' });
 });

@@ -157,7 +157,7 @@ const createUser = (req, res, next) => {
       { new: true, runValidators: true },
     ))
     .then((user) => {
-      res.send(user);
+      res.status(200).send(user);
     }).catch((err) => {
       if (err.name === 'MongoServerError' && err.code === 11000) {
         // console.log(err);
