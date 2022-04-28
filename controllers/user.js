@@ -114,7 +114,7 @@ const getUsersMe = (req, res, next) => {
         return next(new NotFoundError('Пользователь не найден'));
       }
       // console.log(user);
-      res.send(user);
+      res.status(200).send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -133,7 +133,7 @@ const getUser = (req, res, next) => {
         return next(new NotFoundError('Пользователь не найден'));
         // throw new NotFoundError('Пользователь не найден');
       }
-      res.send(user);
+      res.status(200).send({ message: 'Карточка удалена' });
     })
     .catch((err) => {
       // console.log(err);
