@@ -7,11 +7,7 @@ const {
 module.exports = router;
 
 // Получение своего профиля
-router.get('/users/me', celebrate({
-  user: Joi.object().keys({
-    _id: Joi.string().required().alphanum().length(24),
-  }),
-}), getUsersMe);
+router.get('/users/me', getUsersMe);
 
 // Получение всех юзеров
 router.get('/users', getUsers);
@@ -22,21 +18,12 @@ router.get('/users/:userId', celebrate({
     _id: Joi.string().required().alphanum().length(24),
   }),
 }), getUser);
-// router.get('/users/me', getMe);
 
 // Создание юзера
 // router.post('/users', createUser);
 
 // Обновление профиля юзера
-router.patch('/users/me', celebrate({
-  user: Joi.object().keys({
-    _id: Joi.string().required().alphanum().length(24),
-  }),
-}), patchUser);
+router.patch('/users/me', patchUser);
 
 // Обновление аватара
-router.patch('/users/me/avatar', celebrate({
-  user: Joi.object().keys({
-    _id: Joi.string().required().alphanum().length(24),
-  }),
-}), patchAvatar);
+router.patch('/users/me/avatar', patchAvatar);

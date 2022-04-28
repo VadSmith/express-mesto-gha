@@ -12,7 +12,6 @@ module.exports = router;
 // POST / cards — создаёт карточку
 // PUT / cards /: cardId / likes — поставить лайк карточке
 // DELETE / cards /: cardId / likes — убрать лайк с карточки
-
 router.get('/cards', getCards);
 
 router.delete('/cards/:cardId', celebrate({
