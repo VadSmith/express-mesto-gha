@@ -4,7 +4,7 @@
 /* eslint-disable consistent-return */
 const CastError = require('../errors/CastError');
 const NotFoundError = require('../errors/NotFoundError');
-const ValidationError = require('../errors/ValidationError');
+// const ValidationError = require('../errors/ValidationError');
 // const ForbiddenError = require('../errors/ForbiddenError');
 const Card = require('../models/card');
 
@@ -30,16 +30,20 @@ const createCard = (req, res, next) => {
   const owner = req.user._id;
   Card.create(
     { name, link, owner },
-    // { new: true, runValidators: true }
+    {
+      new: true,
+      runValidators: true
+    }
   )
     .then((card) => {
       res.send(card);
     })
     // eslint-disable-next-line consistent-return
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        return next(new ValidationError('Ошибка: Введены некорректные данные'));
-      }
+      console.log(err);
+      // if (err.name === 'ValidationError') {
+      //   return next(new ValidationError('Ошибка: Введены некорректные данные'));
+      // }
       next(err);
     });
 };
@@ -112,7 +116,8 @@ const getCard = (req, res) => {
       }
       res.send(card);
     })
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => next(err));
+  // .catch ((err) => res.status(500).send({ message: err.message }));
 };
 
 // Лайк карточке

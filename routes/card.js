@@ -28,8 +28,9 @@ router.post(
   celebrate({
     body: Joi.object().keys({
       name: Joi.string().required().min(2).max(30),
-      link: Joi.string().required(),
-    }),
+      link: Joi.string().required().pattern(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+$/),
+    }).messages({ 'string.pattern': 'Должен быть корректный URL' }),
+
   }),
   createCard,
 );
