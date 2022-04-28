@@ -65,15 +65,16 @@ const deleteCard = (req, res, next) => {
   Сard.findById(req.params.cardId)
     .then((card) => {
       if (!card) {
-        throw new NotFoundError('Карточка с указанным _id не найдена');
-      } else if (!card.owner.equals(req.user._id)) {
-        throw new ForbiddenError('Невозможно удалить чужую карточку');
-      } else {
-        return card
-          .remove()
-          .then(() => res.status(200)
-            .send(card));
+        // throw new NotFoundError('Карточка с указанным _id не найдена');
+        return next(new NotFoundError('Карточка с указанным _id не найдена'));
       }
+      if (!card.owner.equals(req.user._id)) {
+        // throw new ForbiddenError('Невозможно удалить чужую карточку');
+        return next(new ForbiddenError('Невозможно удалить чужую карточку'));
+      }
+      return card
+        .remove()
+        .then(() => res.status(200).send(card));
     })
     .catch((err) => {
       if (err.name === 'CastError') {
