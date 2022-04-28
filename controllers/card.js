@@ -66,7 +66,7 @@ const deleteCard = (req, res, next) => {
   Card.deleteOne({ _id: req.params.cardId })
     .then((result) => {
       if (result.deletedCount > 0) {
-        res.status(200).send('Карточка удалена');
+        res.status(200).send({ message: 'Карточка удалена' });
       } else {
         throw new NotFoundError('Карточка с указанным _id не найдена');
       }
