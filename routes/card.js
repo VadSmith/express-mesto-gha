@@ -25,5 +25,9 @@ router.post(
   }),
   createCard,
 );
-router.put('/cards/:cardId/likes', likeCard);
+router.put('/cards/:cardId/likes', celebrate({
+  body: Joi.object().keys({
+    _id: Joi.string().required().alphanum().length(24),
+  }),
+}), likeCard);
 router.delete('/cards/:cardId/likes', dislikeCard);
