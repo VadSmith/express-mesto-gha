@@ -14,7 +14,16 @@ module.exports = router;
 // DELETE / cards /: cardId / likes — убрать лайк с карточки
 
 router.get('/cards', getCards);
-router.delete('/cards/:cardId', deleteCard);
+
+router.delete('/cards/:cardId', celebrate({
+  body: Joi.object().keys({
+    _id: Joi.string().required().alphanum().length(24),
+  }),
+}), deleteCard);
+
+// router.post('/cards', createCard);
+// router.put('/cards/:cardId/likes', likeCard);
+
 router.post(
   '/cards',
   celebrate({
@@ -25,9 +34,15 @@ router.post(
   }),
   createCard,
 );
+
 router.put('/cards/:cardId/likes', celebrate({
   body: Joi.object().keys({
     _id: Joi.string().required().alphanum().length(24),
   }),
 }), likeCard);
-router.delete('/cards/:cardId/likes', dislikeCard);
+
+router.delete('/cards/:cardId/likes', celebrate({
+  body: Joi.object().keys({
+    _id: Joi.string().required().alphanum().length(24),
+  }),
+}), dislikeCard);
