@@ -1,3 +1,4 @@
+const { celebrate, Joi } = require('celebrate');
 const router = require('express').Router();
 const {
   getUsers, getUser, patchUser, patchAvatar, getUsersMe,
@@ -12,7 +13,11 @@ router.get('/users/me', getUsersMe);
 router.get('/users', getUsers);
 
 // Получение юзера по ID
-router.get('/users/:userId', getUser);
+router.get('/users/:userId', celebrate({
+  body: Joi.object().keys({
+    _id: Joi.string().required().alphanum().length(24),
+  }),
+}), getUser);
 // router.get('/users/me', getMe);
 
 // Создание юзера
