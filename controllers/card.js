@@ -4,7 +4,7 @@
 /* eslint-disable consistent-return */
 const CastError = require('../errors/CastError');
 const NotFoundError = require('../errors/NotFoundError');
-// const ValidationError = require('../errors/ValidationError');
+const ValidationError = require('../errors/ValidationError');
 const ForbiddenError = require('../errors/ForbiddenError');
 const Card = require('../models/card');
 
@@ -25,54 +25,25 @@ const getCards = (req, res) => {
 
 // Создание карточки
 const createCard = (req, res, next) => {
-  // получим из объекта запроса имя и описание пользователя
-  console.log(req.body);
   const { name, link } = req.body;
   const owner = req.user._id;
   Card.create(
     { name, link, owner },
-    {
-      new: true,
-      runValidators: true
-    }
+    // {
+    //   new: true,
+    //   runValidators: true
+    // }
   )
     .then((card) => {
       res.send(card);
     })
-    // eslint-disable-next-line consistent-return
     .catch((err) => {
-      console.log(err.name);
-      // if (err.name === 'ValidationError') {
-      //   return next(new ValidationError('Ошибка: Введены некорректные данные'));
-      // }
+      if (err.name === 'ValidationError') {
+        next(new ValidationError('Ошибка: Введены некорректные данные'));
+      }
       next(err);
     });
 };
-// Создание карточки
-// const createCard = (req, res, next) => {
-//   // получим из объекта запроса имя и описание пользователя
-//   console.log(req.body);
-//   const { name, link } = req.body;
-//   const owner = req.user._id;
-//   Card.create(
-//     { name, link, owner },
-//     {
-//       new: true,
-//       runValidators: true
-//     }
-//   )
-//     .then((card) => {
-//       res.send(card);
-//     })
-//     // eslint-disable-next-line consistent-return
-//     .catch((err) => {
-//       console.log(err.name);
-//       // if (err.name === 'ValidationError') {
-//       //   return next(new ValidationError('Ошибка: Введены некорректные данные'));
-//       // }
-//       next(err);
-//     });
-// };
 
 const deleteCard = (req, res, next) => {
   Card.findByIdAndRemove(req.params.cardId)

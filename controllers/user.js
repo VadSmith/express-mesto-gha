@@ -114,7 +114,6 @@ const getUsersMe = (req, res, next) => {
       if (!user) {
         return next(new NotFoundError('Пользователь не найден'));
       }
-      // console.log(user);
       res.status(200).send(user);
     })
     .catch((err) => {
@@ -145,53 +144,33 @@ const getUser = (req, res, next) => {
     });
 };
 
-// Создание юзера
-const createUser = async (req, res, next) => {
+const createUser = (req, res, next) => {
   const {
-    email, password, name, about, avatar,
+    name, about, avatar, email, password,
   } = req.body;
-  try {
-    const hash = await bcrypt.hash(password, 10);
-    const user = await User.create({
-      email, password: hash, name, about, avatar,
+  bcrypt.hash(password, 10)
+    .then((hash) => User.create(
+      {
+        name, about, avatar, email, password: hash,
+      },
+      // {
+      //   new: true,
+      //   runValidators: true,
+      // },
+    ))
+    .then((user) => {
+      res.send(user);
+    })
+    .catch((err) => {
+      if (err.code === 11000) {
+        next(new UserExistsError('Пользователь с таким email существует'));
+      } else if (err.name === 'ValidationError' || err.name === 'CastError') {
+        next(new ValidationError('Переданы некорректные данные'));
+      } else {
+        next(err);
+      }
     });
-
-    res.status(200).send({ user });
-  } catch (err) {
-    if (err.code === 11000) {
-      next(new UserExistsError('Пользователь с таким email существует'));
-    } else if (err.name === 'ValidationError' || err.name === 'CastError') {
-      next(new ValidationError('Переданы некорректные данные'));
-    } else {
-      next(err);
-    }
-  }
 };
-
-// const createUser = (req, res, next) => {
-//   const {
-//     name, about, avatar, email, password,
-//   } = req.body;
-//   bcrypt.hash(password, 10)
-//     // .then(console.log(email, password))
-//     .then((hash) => User.create(
-//       {
-//         name, about, avatar, email, password: hash,
-//       },
-//       {
-//         new: true,
-//         runValidators: true,
-//       },
-//     ))
-//     .then((user) => {
-//       console.log(user);
-//       res.send(user);
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//       return next(err);
-//     });
-// };
 
 module.exports = {
   createUser,
