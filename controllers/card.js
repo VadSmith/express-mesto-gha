@@ -26,6 +26,7 @@ const getCards = (req, res) => {
 // Создание карточки
 const createCard = (req, res, next) => {
   // получим из объекта запроса имя и описание пользователя
+  console.log(req.body);
   const { name, link } = req.body;
   const owner = req.user._id;
   Card.create(
@@ -40,17 +41,43 @@ const createCard = (req, res, next) => {
     })
     // eslint-disable-next-line consistent-return
     .catch((err) => {
-      console.log(err);
+      console.log(err.name);
       // if (err.name === 'ValidationError') {
       //   return next(new ValidationError('Ошибка: Введены некорректные данные'));
       // }
       next(err);
     });
 };
+// Создание карточки
+// const createCard = (req, res, next) => {
+//   // получим из объекта запроса имя и описание пользователя
+//   console.log(req.body);
+//   const { name, link } = req.body;
+//   const owner = req.user._id;
+//   Card.create(
+//     { name, link, owner },
+//     {
+//       new: true,
+//       runValidators: true
+//     }
+//   )
+//     .then((card) => {
+//       res.send(card);
+//     })
+//     // eslint-disable-next-line consistent-return
+//     .catch((err) => {
+//       console.log(err.name);
+//       // if (err.name === 'ValidationError') {
+//       //   return next(new ValidationError('Ошибка: Введены некорректные данные'));
+//       // }
+//       next(err);
+//     });
+// };
 
 const deleteCard = (req, res, next) => {
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
+      console.log('deleteCard', card);
       if (!card) {
         throw new NotFoundError('Карточка не найдена');
       }
