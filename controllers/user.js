@@ -69,7 +69,7 @@ const patchUser = (req, res, next) => {
 // Обновить аватар
 const patchAvatar = (req, res, next) => {
   User.findByIdAndUpdate(
-    req.user._id,
+    { _id: req.user._id },
     { avatar: req.body.avatar },
     {
       new: true,
@@ -87,9 +87,9 @@ const patchAvatar = (req, res, next) => {
       if (err.name === 'CastError') {
         return next(new CastError('Ошибка: Введен некорректный id пользователя'));
       }
-      if (err.name === 'ValidationError') {
-        return next(new ValidationError('Ошибка: Введены некорректные данные'));
-      }
+      // if (err.name === 'ValidationError') {
+      //   return next(new ValidationError('Ошибка: Введены некорректные данные'));
+      // }
       next(err);
     });
 };
@@ -133,7 +133,7 @@ const getUser = (req, res, next) => {
         return next(new NotFoundError('Пользователь не найден'));
         // throw new NotFoundError('Пользователь не найден');
       }
-      res.status(200).send({ message: 'Карточка удалена' });
+      res.status(200).send(user);
     })
     .catch((err) => {
       // console.log(err);
