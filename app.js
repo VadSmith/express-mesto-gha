@@ -35,7 +35,7 @@ app.post('/signup', celebrate({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
     avatar: Joi.string().pattern(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+$/),
-  }).messages({ 'string.pattern': 'Должен быть корректный URL' }),
+  }),
 }), createUser);
 
 app.use(auth);
@@ -45,9 +45,9 @@ app.use(require('./routes/user'));
 // app.patch('/404', (req, res) => {
 //   res.status(404).send({ message: 'Cтраница не найдена' });
 // });
-app.use((req, res) => {
-  res.status(404).send({ message: 'Cтраница не найдена' });
-});
+// app.use((req, res) => {
+//   res.status(404).send({ message: 'Cтраница не найдена' });
+// });
 
 app.use(errors());
 

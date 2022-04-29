@@ -150,22 +150,28 @@ const createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
+  console.log(req.body);
   bcrypt.hash(password, 10)
     .then((hash) => User.create(
       {
         name, about, avatar, email, password: hash,
       },
-      { new: true, runValidators: true },
+      {
+        new: true,
+        runValidators: true,
+      },
     ))
     .then((user) => {
       res.status(200).send(user);
     }).catch((err) => {
-      if (err.name === 'MongoServerError' && err.code === 11000) {
-        // console.log(err);
-        return next(new UserExistsError('Этот email уже занят'));
+      // if (err.code === 11000) {
+      if (err) {
+        console.log(err);
+        console.log('in catch', password);
+        next(new UserExistsError('Этот email уже занят'));
       }
       if (err.name === 'ValidationError') {
-        return next(new ValidationError('Ошибка: Введены некорректные данные!'));
+        next(new ValidationError('Ошибка: Введены некорректные данные!'));
       }
       next(err);
     });
