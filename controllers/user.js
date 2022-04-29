@@ -25,7 +25,7 @@ const login = (req, res) => {
               maxAge: 3600000,
               httpOnly: true,
               sameSite: true,
-            })
+            }).send({ message: 'Успешный вход' })
             // .catch((err) => {
             //   res
             //     .status(401)
