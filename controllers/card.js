@@ -67,16 +67,22 @@ const createCard = (req, res, next) => {
 // };
 
 const deleteCard = (req, res, next) => {
-  Card.deleteOne({ _id: req.params.cardId })
-    .then((result) => {
-      if (result.deletedCount > 0) {
-        res.status(200).send({ message: 'Карточка удалена' });
-      } else {
-        throw new NotFoundError('Карточка с указанным _id не найдена');
+  Card.findByIdAndRemove(req.params.cardId)
+    .then((card) => {
+      if (!card) {
+        throw new NotFoundError('Карточка не найдена');
       }
-    }).catch((err) => {
-      console.log(err);
-      return next(err);
+      // if (card.owner._id.toString() !== req.user._id.toString()) {
+      if (card.owner._id !== req.user._id) {
+        throw new ForbiddenError('Невозможно удалить чужую карточку');
+      }
+      res.send({ data: card });
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Некорректные данные'));
+      }
+      next(err);
     });
 };
 
