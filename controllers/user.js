@@ -153,15 +153,25 @@ const createUser = (req, res, next) => {
       {
         name, about, avatar, email, password: hash,
       },
+      // с этими опциями не видит передаваемых полей
       // {
       //   new: true,
       //   runValidators: true,
       // },
     ))
     .then((user) => {
-      res.send(user);
+      res.send(
+        {
+          _id: user._id,
+          email: user.email,
+          name: user.name,
+          about: user.about,
+          avatar: user.avatar,
+        },
+      );
     })
     .catch((err) => {
+      // console.log(err);
       if (err.code === 11000) {
         next(new UserExistsError('Пользователь с таким email существует'));
       } else if (err.name === 'ValidationError' || err.name === 'CastError') {
