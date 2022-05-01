@@ -11,7 +11,10 @@ const JWT_SECRET = 'verysecretphrase';
 
 const login = (req, res) => {
   const { email, password } = req.body;
-  if (!email || !password) return res.status(400).send({ message: 'Email или пароль не могут быть пустыми' });
+  // if (!email || !password) return res
+  // .status(400)
+  // .send({ message: 'Email или пароль не могут быть пустыми' });
+  if (!email || !password) throw new CastError('Email или пароль не могут быть пустыми');
   User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) return res.status(401).send({ message: 'Неправильный email или пароль' });
@@ -19,7 +22,6 @@ const login = (req, res) => {
         .then((isValidPassword) => {
           if (!isValidPassword) return res.status(401).send({ message: 'Неправильный email или пароль' });
           const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
-          // return res.status(200).send({ message: 'Успешный вход' })
           res.status(200)
             .cookie('jwt', token, {
               maxAge: 3600000,
