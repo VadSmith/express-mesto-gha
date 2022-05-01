@@ -10,21 +10,15 @@ const User = require('../models/user');
 
 const JWT_SECRET = 'verysecretphrase';
 
-const login = (req, res) => {
+const login = (req, res, next) => {
   const { email, password } = req.body;
-  // if (!email || !password) return res
-  // .status(400)
-  // .send({ message: 'Email или пароль не могут быть пустыми' });
-  if (!email || !password) throw new CastError('Email или пароль не могут быть пустыми');
+  if (!email || !password) return next(new CastError('Email или пароль не могут быть пустыми'));
   User.findOne({ email }).select('+password')
     .then((user) => {
-      // if (!user) return res.status(401).send({ message: 'Неправильный email или пароль' });
-      if (!user) throw new UnauthorizedError('Неправильный email или пароль');
+      if (!user) return next(new UnauthorizedError('Неправильный email или пароль'));
       return bcrypt.compare(password, user.password)
         .then((isValidPassword) => {
-          // if (!isValidPassword) return res.status(401)
-          // .send({ message: 'Неправильный email или пароль' });
-          if (!isValidPassword) throw new UnauthorizedError('Неправильный email или пароль');
+          if (!isValidPassword) return next(new UnauthorizedError('Неправильный email или пароль'));
           const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
           res.status(200)
             .cookie('jwt', token, {
@@ -32,15 +26,9 @@ const login = (req, res) => {
               httpOnly: true,
               sameSite: true,
             }).send({ message: 'Успешный вход' })
-            // .catch((err) => {
-            //   res
-            //     .status(401)
-            //     .send({ message: err.message });
-            // })
             .end();
-
-          // return res.status(200).send({ token });
-        });
+        })
+        .catch(() => next());
     });
 };
 
