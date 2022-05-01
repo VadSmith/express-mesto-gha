@@ -7,6 +7,7 @@ const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
 const ForbiddenError = require('../errors/ForbiddenError');
 const Card = require('../models/card');
+// const card = require('../models/card');
 
 // Получение списка карточек
 const getCards = (req, res) => {
@@ -46,24 +47,37 @@ const createCard = (req, res, next) => {
 };
 
 const deleteCard = (req, res, next) => {
-  Card.findByIdAndRemove(req.params.cardId)
+  const { cardId } = req.params;
+  Card.findById(cardId)
+    .orFail(() => new NotFoundError('Карточка с этим ID не найдена'))
     .then((card) => {
-      console.log('deleteCard', card);
-      if (!card) {
-        throw new NotFoundError('Карточка не найдена');
+      if (!card.owner.equals(req.user._id)) {
+        return next(new ForbiddenError('Нельзя удалить чужую карточку'));
       }
-      if (card.owner._id.toString() !== req.user._id.toString()) {
-        throw new ForbiddenError('Невозможно удалить чужую карточку');
-      }
-      res.send({ message: 'Карточка удалена' });
-    })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequestError('Некорректные данные'));
-      }
-      next(err);
-    });
+      return card.remove()
+        .then(() => res.send({ message: 'Карточка удалена' }));
+    }).catch(next);
 };
+
+// const deleteCard = (req, res, next) => {
+//   Card.findByIdAndRemove(req.params.cardId)
+//     .then((card) => {
+//       console.log('deleteCard', card);
+//       if (!card) {
+//         throw new NotFoundError('Карточка не найдена');
+//       }
+//       if (card.owner._id.toString() !== req.user._id.toString()) {
+//         throw new ForbiddenError('Невозможно удалить чужую карточку');
+//       }
+//       res.send({ message: 'Карточка удалена' });
+//     })
+//     .catch((err) => {
+//       if (err.name === 'CastError') {
+//         next(new BadRequestError('Некорректные данные'));
+//       }
+//       next(err);
+//     });
+// };
 
 // Поиск карточки по ID
 const getCard = (req, res) => {
