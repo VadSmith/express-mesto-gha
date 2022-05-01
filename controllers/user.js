@@ -50,9 +50,6 @@ const patchUser = (req, res, next) => {
       res.send(user);
     })
     .catch((err) => {
-      // if (err.name === 'CastError') {
-      //   return next(new CastError('Ошибка: Введен некорректный id пользователя'));
-      // }
       if (err.name === 'ValidationError') {
         return next(new ValidationError('Ошибка: Введены некорректные данные'));
       }
@@ -78,12 +75,12 @@ const patchAvatar = (req, res, next) => {
       res.send(user);
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        return next(new CastError('Ошибка: Введен некорректный id пользователя'));
-      }
-      // if (err.name === 'ValidationError') {
-      //   return next(new ValidationError('Ошибка: Введены некорректные данные'));
+      // if (err.name === 'CastError') {
+      //   return next(new CastError('Ошибка: Введен некорректный id пользователя'));
       // }
+      if (err.name === 'ValidationError') {
+        return next(new ValidationError('Ошибка: Введены некорректные данные'));
+      }
       next(err);
     });
 };
