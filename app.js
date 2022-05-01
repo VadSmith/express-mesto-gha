@@ -7,6 +7,7 @@ const { celebrate, Joi, errors } = require('celebrate');
 const auth = require('./middlewares/auth');
 const { login, createUser } = require('./controllers/user');
 const errorHandler = require('./middlewares/errorHandler');
+const NotFoundError = require('./errors/NotFoundError');
 
 const { PORT = 3000, BASE_URL = 'http://localhost:3000' } = process.env;
 const app = express();
@@ -23,7 +24,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(helmet());
 
-// app.post('/signin', login);
 app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
@@ -31,7 +31,6 @@ app.post('/signin', celebrate({
   }),
 }), login);
 
-// app.post('/signup', createUser);
 app.post('/signup', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
@@ -46,9 +45,7 @@ app.use(auth);
 app.use(require('./routes/card'));
 app.use(require('./routes/user'));
 
-app.use((req, res) => {
-  res.status(404).send({ message: 'Cтраница не найдена' });
-});
+app.use(() => new NotFoundError('Страница не найдена'));
 
 app.use(errors());
 
