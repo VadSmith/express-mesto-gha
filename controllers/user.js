@@ -108,9 +108,9 @@ const getUsersMe = (req, res, next) => {
       res.status(200).send(user);
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        return next(new CastError('Ошибка: Введен некорректный id пользователя!'));
-      }
+      // if (err.name === 'CastError') {
+      //   return next(new CastError('Ошибка: Введен некорректный id пользователя!'));
+      // }
       next(err);
     });
 };
