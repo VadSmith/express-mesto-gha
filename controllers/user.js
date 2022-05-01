@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const CastError = require('../errors/CastError');
 const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
+const UnauthorizedError = require('../errors/UnauthorizedError');
 const UserExistsError = require('../errors/UserExistsError');
 const User = require('../models/user');
 
@@ -17,10 +18,13 @@ const login = (req, res) => {
   if (!email || !password) throw new CastError('Email или пароль не могут быть пустыми');
   User.findOne({ email }).select('+password')
     .then((user) => {
-      if (!user) return res.status(401).send({ message: 'Неправильный email или пароль' });
+      // if (!user) return res.status(401).send({ message: 'Неправильный email или пароль' });
+      if (!user) throw new UnauthorizedError('Неправильный email или пароль');
       return bcrypt.compare(password, user.password)
         .then((isValidPassword) => {
-          if (!isValidPassword) return res.status(401).send({ message: 'Неправильный email или пароль' });
+          // if (!isValidPassword) return res.status(401)
+          // .send({ message: 'Неправильный email или пароль' });
+          if (!isValidPassword) throw new UnauthorizedError('Неправильный email или пароль');
           const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
           res.status(200)
             .cookie('jwt', token, {
