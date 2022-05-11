@@ -8,6 +8,7 @@ const auth = require('./middlewares/auth');
 const { login, createUser } = require('./controllers/user');
 const errorHandler = require('./middlewares/errorHandler');
 const NotFoundError = require('./errors/NotFoundError');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000, BASE_URL = 'http://localhost:3000' } = process.env;
 const app = express();
@@ -23,6 +24,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(helmet());
+
+app.use(requestLogger); // подключаем логгер запросов
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
@@ -46,6 +49,7 @@ app.use(require('./routes/card'));
 app.use(require('./routes/user'));
 
 app.use(() => { throw new NotFoundError('Страница не найдена'); });
+app.use(errorLogger);
 
 app.use(errors());
 
