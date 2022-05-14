@@ -10,7 +10,7 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const auth = require('./middlewares/auth');
 const errorHandler = require('./middlewares/errorHandler');
 const NotFoundError = require('./errors/NotFoundError');
-const cors = require('./middlewares/cors');
+// const cors = require('./middlewares/cors');
 
 const { PORT = 3000, BASE_URL = 'http://localhost:3000' } = process.env;
 const app = express();
