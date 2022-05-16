@@ -26,7 +26,7 @@ const login = (req, res, next) => {
               httpOnly: true,
               sameSite: true,
               // }).send({ message: 'Успешный вход' })
-            }).send({ token })
+            }).send({ message: 'Успешный вход', token })
             .end();
         })
         .catch(() => next());
