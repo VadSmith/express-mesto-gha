@@ -4,7 +4,9 @@ const allowedCors = [
   'http://praktikum.tk',
   'localhost:3000',
   'http://api.vad.nomoreparties.sbs',
+  'https://api.vad.nomoreparties.sbs',
   'http://vad.nomoredomains.xyz',
+  'https://vad.nomoredomains.xyz',
 ];
 module.exports = (req, res, next) => {
   const { method } = req;
