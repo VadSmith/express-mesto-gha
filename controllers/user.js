@@ -21,12 +21,12 @@ const login = (req, res, next) => {
           if (!isValidPassword) return next(new UnauthorizedError('Неправильный email или пароль'));
           const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
           res.status(200)
-            // .cookie('jwt', token, {
-            //   maxAge: 3600000,
-            //   httpOnly: true,
-            //   sameSite: true,
-            //   // }).send({ message: 'Успешный вход' })
-            // })
+            .cookie('jwt', token, {
+              maxAge: 3600000,
+              httpOnly: true,
+              sameSite: true,
+              // }).send({ message: 'Успешный вход' })
+            })
             .send({ message: 'Успешный вход', token })
             .end();
         })
