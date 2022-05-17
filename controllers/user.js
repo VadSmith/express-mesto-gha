@@ -27,7 +27,7 @@ const login = (req, res, next) => {
               sameSite: true,
               // }).send({ message: 'Успешный вход' })
             })
-            .send({ message: 'Успешный вход', token })
+            .send({ token })
             .end();
         })
         .catch(() => next());
