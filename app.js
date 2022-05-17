@@ -35,6 +35,7 @@ const allowedCors = [
   'https://api.vad.nomoreparties.sbs',
   'http://vad.nomoredomains.xyz',
   'https://vad.nomoredomains.xyz',
+  '*',
 ];
 
 app.use(bodyParser.json());
