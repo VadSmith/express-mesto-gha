@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser');
 const { celebrate, Joi, errors } = require('celebrate');
 const { login, createUser } = require('./controllers/user');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const auth = require('./middlewares/auth');
+// const auth = require('./middlewares/auth');
 const errorHandler = require('./middlewares/errorHandler');
 const NotFoundError = require('./errors/NotFoundError');
 // const cors = require('./middlewares/cors');
@@ -76,7 +76,7 @@ app.post('/signup', celebrate({
   }),
 }), createUser);
 
-app.use(auth);
+// app.use(auth);
 app.use(require('./routes/card'));
 app.use(require('./routes/user'));
 
