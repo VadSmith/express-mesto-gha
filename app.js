@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser');
 const { celebrate, Joi, errors } = require('celebrate');
 const { login, createUser } = require('./controllers/user');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-// const auth = require('./middlewares/auth');
+const auth = require('./middlewares/auth');
 const errorHandler = require('./middlewares/errorHandler');
 const NotFoundError = require('./errors/NotFoundError');
 // const cors = require('./middlewares/cors');
@@ -22,20 +22,19 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   // useFindAndModify: false,
 });
 
-// app.use(cors);
-// const allowedCors = [
-//   'https://praktikum.tk',
-//   'http://praktikum.tk',
-//   'localhost:3000',
-//   'localhost:3001',
-//   'http://localhost:3001',
-//   'https://localhost:3001',
-//   'http://localhost:3000',
-//   'http://api.vad.nomoreparties.sbs',
-//   'https://api.vad.nomoreparties.sbs',
-//   'http://vad.nomoredomains.xyz',
-//   'https://vad.nomoredomains.xyz',
-// ];
+const allowedCors = [
+  'https://praktikum.tk',
+  'http://praktikum.tk',
+  'localhost:3000',
+  'localhost:3001',
+  'http://localhost:3001',
+  'https://localhost:3001',
+  'http://localhost:3000',
+  'http://api.vad.nomoreparties.sbs',
+  'https://api.vad.nomoreparties.sbs',
+  'http://vad.nomoredomains.xyz',
+  'https://vad.nomoredomains.xyz',
+];
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -76,7 +75,7 @@ app.post('/signup', celebrate({
   }),
 }), createUser);
 
-// app.use(auth);
+app.use(auth);
 app.use(require('./routes/card'));
 app.use(require('./routes/user'));
 
