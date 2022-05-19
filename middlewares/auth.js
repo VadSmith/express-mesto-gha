@@ -8,7 +8,7 @@ module.exports = (req, res, next) => {
   if (!authorization || !authorization.startsWith('Bearer ')) {
     return res
       .status(401)
-      .send({ message: 'Необходима авторизация' });
+      .send({ message: 'Необходима авторизация!' });
     // return next(new UnauthorizedError('Неправильный email или пароль'));
   }
 
