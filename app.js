@@ -30,6 +30,7 @@ const allowedCors = [
   'http://localhost:3001',
   'https://localhost:3001',
   'http://localhost:3000',
+  'https://localhost:3000',
   'http://api.vad.nomoreparties.sbs',
   'https://api.vad.nomoreparties.sbs',
   'http://vad.nomoredomains.xyz',
