@@ -14,6 +14,7 @@ module.exports = (req, res, next) => {
 
   // const token = authorization.replace('Bearer ', '');
   const token = res.cookie.jwt;
+
   if (!token) {
     return next(new UnauthorizedError('Ошибка авторизации'));
   }
