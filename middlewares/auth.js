@@ -3,30 +3,45 @@ const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require('../controllers/user');
 
 module.exports = (req, res, next) => {
-  const { authorization } = req.headers;
-
-  if (!authorization || !authorization.startsWith('Bearer ')) {
-    return res
-      .status(401)
-      .send({ message: 'Необходима авторизация!' });
-    // return next(new UnauthorizedError('Неправильный email или пароль'));
+  const token = req.cookies.jwt;
+  // const secret = NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret';
+  if (!token) {
+    return next(new AuthorizationError('Ошибка авторизации'));
   }
 
-  const token = authorization.replace('Bearer ', '');
   let payload;
-
   try {
-    payload = jwt.verify(token, JWT_SECRET);
+    payload = jwt.verify(token, secret);
   } catch (err) {
-    return res
-      .status(401)
-      .send({ message: 'Необходима авторизация' });
-    // return next(new UnauthorizedError('Неправильный email или пароль'));
+    return next(new AuthorizationError('Необходима авторизация'));
   }
+  req.user = payload;
 
-  req.user = payload; // записываем пейлоуд в объект запроса
+  return next();
+  // const { authorization } = req.headers;
 
-  return next(); // пропускаем запрос дальше
+  // if (!authorization || !authorization.startsWith('Bearer ')) {
+  //   return res
+  //     .status(401)
+  //     .send({ message: 'Необходима авторизация!' });
+  //   // return next(new UnauthorizedError('Неправильный email или пароль'));
+  // }
+
+  // const token = authorization.replace('Bearer ', '');
+  // let payload;
+
+  // try {
+  //   payload = jwt.verify(token, JWT_SECRET);
+  // } catch (err) {
+  //   return res
+  //     .status(401)
+  //     .send({ message: 'Необходима авторизация' });
+  //   // return next(new UnauthorizedError('Неправильный email или пароль'));
+  // }
+
+  // req.user = payload; // записываем пейлоуд в объект запроса
+
+  // return next(); // пропускаем запрос дальше
 };
 
 // module.exports = (req, res, next) => {
