@@ -5,9 +5,9 @@ const { JWT_SECRET } = require('../controllers/user');
 module.exports = (req, res, next) => {
   const token = req.cookies.jwt;
   // const secret = NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret';
-  if (!token) {
-    return next(new UnauthorizedError('Ошибка авторизации'));
-  }
+  //if (!token) {
+  //  return next(new UnauthorizedError('Ошибка авторизации'));
+  //}
 
   let payload;
   try {
