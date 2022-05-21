@@ -43,7 +43,8 @@ const logout = (req, res, next) => {
     .then((user) => {
       if (user) {
         // res.clearCookie('jwt');
-        res.cookie('jwt', {}, { maxAge: -1 });
+        // res.cookie('jwt', {}, { maxAge: -1 });
+        res.cookie('jwt', {}, { expires: Date.now(0) });
         res.send({ message: 'Выход' });
       }
     })
