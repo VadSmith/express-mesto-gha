@@ -42,7 +42,8 @@ const logout = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
       if (user) {
-        res.clearCookie('jwt');
+        // res.clearCookie('jwt');
+        res.cookie('jwt', {}, { maxAge: -1 });
         res.send({ message: 'Выход' });
       }
     })
