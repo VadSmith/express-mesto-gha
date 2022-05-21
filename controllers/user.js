@@ -13,10 +13,15 @@ const JWT_SECRET = 'verysecretphrase';
 const login = (req, res, next) => {
   console.log('inside user.js/login', Date.now());
   const { email, password } = req.body;
-  if (!email || !password) return next(new CastError('Email или пароль не могут быть пустыми'));
+
+  if (!email || !password)
+    return next(new CastError('Email или пароль не могут быть пустыми'));
+
   User.findOne({ email }).select('+password')
     .then((user) => {
-      if (!user) return next(new UnauthorizedError('Неправильный email или пароль'));
+      if (!user)
+        return next(new UnauthorizedError('Неправильный email или пароль'));
+
       return bcrypt.compare(password, user.password)
         .then((isValidPassword) => {
           if (!isValidPassword) return next(new UnauthorizedError('Неправильный email или пароль'));
