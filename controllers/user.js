@@ -24,7 +24,8 @@ const login = (req, res, next) => {
 
       return bcrypt.compare(password, user.password)
         .then((isValidPassword) => {
-          if (!isValidPassword) return next(new UnauthorizedError('Неправильный email или пароль'));
+          if (!isValidPassword)
+            return next(new UnauthorizedError('Неправильный email или пароль'));
           const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
           res.status(200);
           res.cookie('jwt', token, {

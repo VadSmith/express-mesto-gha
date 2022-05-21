@@ -12,7 +12,7 @@ module.exports = (req, res, next) => {
 
   let payload;
   try {
-    console.log('auth.js try payload', Date.now());
+    console.log('auth.js try payload');
     payload = jwt.verify(token, secret);
   } catch (err) {
     return next(new UnauthorizedError('Необходима авторизация'));
@@ -20,44 +20,4 @@ module.exports = (req, res, next) => {
   req.user = payload;
 
   return next();
-  // const { authorization } = req.headers;
-
-  // if (!authorization || !authorization.startsWith('Bearer ')) {
-  //   return res
-  //     .status(401)
-  //     .send({ message: 'Необходима авторизация!' });
-  //   // return next(new UnauthorizedError('Неправильный email или пароль'));
-  // }
-
-  // const token = authorization.replace('Bearer ', '');
-  // let payload;
-
-  // try {
-  //   payload = jwt.verify(token, JWT_SECRET);
-  // } catch (err) {
-  //   return res
-  //     .status(401)
-  //     .send({ message: 'Необходима авторизация' });
-  //   // return next(new UnauthorizedError('Неправильный email или пароль'));
-  // }
-
-  // req.user = payload; // записываем пейлоуд в объект запроса
-
-  // return next(); // пропускаем запрос дальше
 };
-
-// module.exports = (req, res, next) => {
-//   if (!req.cookies.jwt) {
-//     return next(new UnauthorizedError('Неправильный email или пароль'));
-//   }
-//   const token = req.cookies.jwt;
-//   console.log('cookie.jwt in auth: ', token);
-//   let payload;
-//   try {
-//     payload = jwt.verify(token, JWT_SECRET);
-//   } catch (err) {
-//     return next(new UnauthorizedError('Неправильный email или пароль'));
-//   }
-//   req.user = payload;
-//   return next();
-// };
