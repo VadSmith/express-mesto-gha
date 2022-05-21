@@ -45,8 +45,12 @@ const logout = (req, res, next) => {
         // res.clearCookie('jwt');
         // res.cookie('jwt', {}, { maxAge: -1 });
         // res.cookie('jwt', {}, { expires: Date.now(0) });
-        res.clearCookie('jwt', { path: '/', domain: 'api.vad.nomoreparties.sbs' });
-        res.send({ message: 'Выход' });
+        // res.clearCookie('jwt', { path: '/', domain: 'api.vad.nomoreparties.sbs' });
+        res.clearCookie('jwt', {
+          sameSite: 'none',
+          secure: true,
+        }).send({ message: 'Успешный выход из системы' });
+        // res.send({ message: 'Выход' });
       }
     })
     .catch(next);
