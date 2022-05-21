@@ -14,30 +14,39 @@ const login = (req, res, next) => {
   console.log('inside user.js/login', Date.now());
   const { email, password } = req.body;
 
-  if (!email || !password)
-    return next(new CastError('Email или пароль не могут быть пустыми'));
+  if (!email || !password) { return next(new CastError('Email или пароль не могут быть пустыми')); }
 
   User.findOne({ email }).select('+password')
     .then((user) => {
-      if (!user)
-        return next(new UnauthorizedError('Неправильный email или пароль'));
+      if (!user) { return next(new UnauthorizedError('Неправильный email или пароль')); }
 
       return bcrypt.compare(password, user.password)
         .then((isValidPassword) => {
-          if (!isValidPassword)
-            return next(new UnauthorizedError('Неправильный email или пароль'));
+          if (!isValidPassword) { return next(new UnauthorizedError('Неправильный email или пароль')); }
           const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
           res.status(200);
           res.cookie('jwt', token, {
             maxAge: 3600000,
             httpOnly: true,
             sameSite: 'none',
-            secure: true
+            secure: true,
           });
-          res.send({ message: "Успешный вход" });
+          res.send({ message: 'Успешный вход' });
         })
         .catch(() => next());
     });
+};
+
+// Logout
+const logout = (req, res, next) => {
+  User.findById(req.user._id)
+    .then((user) => {
+      if (user) {
+        res.clearCookie('jwt');
+        res.send({ message: 'Выход' });
+      }
+    })
+    .catch(next);
 };
 
 // Обновить профиль
@@ -189,5 +198,6 @@ module.exports = {
   patchUser,
   patchAvatar,
   login,
+  logout,
   JWT_SECRET,
 };
