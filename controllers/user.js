@@ -11,6 +11,7 @@ const User = require('../models/user');
 const JWT_SECRET = 'verysecretphrase';
 
 const login = (req, res, next) => {
+  console.log('inside user.js/login', Date.now());
   const { email, password } = req.body;
   if (!email || !password) return next(new CastError('Email или пароль не могут быть пустыми'));
   User.findOne({ email }).select('+password')
