@@ -60,7 +60,7 @@ app.use((req, res, next) => {
   return null;
 });
 
-app.use(requestLogger); // подключаем логгер запросов
+app.use(requestLogger);
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
