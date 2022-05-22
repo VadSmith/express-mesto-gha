@@ -11,9 +11,10 @@ const User = require('../models/user');
 const JWT_SECRET = 'verysecretphrase';
 
 const login = (req, res, next) => {
+  console.log('inside user.js/login', Date.now());
   const { email, password } = req.body;
 
-  if (!email || !password) return next(new CastError('Email или пароль не могут быть пустыми'));
+  if (!email || !password) { return next(new CastError('Email или пароль не могут быть пустыми')); }
 
   User.findOne({ email }).select('+password')
     .then((user) => {
@@ -23,13 +24,14 @@ const login = (req, res, next) => {
         .then((isValidPassword) => {
           if (!isValidPassword) { return next(new UnauthorizedError('Неправильный email или пароль')); }
           const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
-          res.status(200)
-            .cookie('jwt', token, {
-              maxAge: 3600000,
-              httpOnly: true,
-              sameSite: 'none',
-              secure: true,
-            }).send({ token, message: 'Успешный вход' });
+          res.status(200);
+          res.cookie('jwt', token, {
+            maxAge: 3600000,
+            httpOnly: true,
+            sameSite: 'none',
+            secure: true,
+          });
+          res.send({ message: 'Успешный вход' });
         })
         .catch(() => next());
     });
@@ -48,7 +50,6 @@ const logout = (req, res, next) => {
           sameSite: 'none',
           secure: true,
         }).send({ message: 'Успешный выход из системы' });
-        // res.send({ message: 'Выход' });
       }
     })
     .catch(next);
