@@ -2,6 +2,7 @@
 /* eslint-disable eol-last */
 /* eslint-disable no-undef */
 /* eslint-disable consistent-return */
+require('dotenv').config();
 const CastError = require('../errors/CastError');
 const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
@@ -30,10 +31,6 @@ const createCard = (req, res, next) => {
   const owner = req.user._id;
   Card.create(
     { name, link, owner },
-    // {
-    //   new: true,
-    //   runValidators: true
-    // }
   )
     .then((card) => {
       res.send(card);
@@ -59,26 +56,6 @@ const deleteCard = (req, res, next) => {
     }).catch(next);
 };
 
-// const deleteCard = (req, res, next) => {
-//   Card.findByIdAndRemove(req.params.cardId)
-//     .then((card) => {
-//       console.log('deleteCard', card);
-//       if (!card) {
-//         throw new NotFoundError('Карточка не найдена');
-//       }
-//       if (card.owner._id.toString() !== req.user._id.toString()) {
-//         throw new ForbiddenError('Невозможно удалить чужую карточку');
-//       }
-//       res.send({ message: 'Карточка удалена' });
-//     })
-//     .catch((err) => {
-//       if (err.name === 'CastError') {
-//         next(new BadRequestError('Некорректные данные'));
-//       }
-//       next(err);
-//     });
-// };
-
 // Поиск карточки по ID
 const getCard = (req, res) => {
   Card.findById(req.params.cardId)
@@ -89,7 +66,6 @@ const getCard = (req, res) => {
       res.send(card);
     })
     .catch((err) => next(err));
-  // .catch ((err) => res.status(500).send({ message: err.message }));
 };
 
 // Лайк карточке
