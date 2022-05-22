@@ -1,3 +1,4 @@
+require('dotenv').config();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 /* eslint-disable consistent-return */
@@ -8,7 +9,8 @@ const UnauthorizedError = require('../errors/UnauthorizedError');
 const UserExistsError = require('../errors/UserExistsError');
 const User = require('../models/user');
 
-const JWT_SECRET = 'verysecretphrase';
+const { NODE_ENV, JWT_SECRET } = process.env;
+const secret = NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret';
 
 const login = (req, res, next) => {
   console.log('inside user.js/login', Date.now());
@@ -23,7 +25,7 @@ const login = (req, res, next) => {
       return bcrypt.compare(password, user.password)
         .then((isValidPassword) => {
           if (!isValidPassword) { return next(new UnauthorizedError('Неправильный email или пароль')); }
-          const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
+          const token = jwt.sign({ _id: user._id }, secret, { expiresIn: '7d' });
           res.status(200);
           res.cookie('jwt', token, {
             maxAge: 3600000,
